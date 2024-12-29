@@ -46,6 +46,29 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
+const getRevenue = async (req: Request, res: Response) => {
+  try {
+    const totalRevenue = await orderServices.calculateTotalRevenue();
+
+    res.status(200).json({
+      message: 'Revenue calculated successfully',
+      status: true,
+      data: {
+        totalRevenue,
+      },
+    });
+  } catch (err) {
+    console.error('Error fetching revenue:', err);
+
+    res.status(500).json({
+      message: 'Failed to calculate revenue',
+      status: false,
+      error: err,
+    });
+  }
+};
+
 export const orderController = {
   createOrder,
+  getRevenue,
 };

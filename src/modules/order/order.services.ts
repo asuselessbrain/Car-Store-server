@@ -34,7 +34,45 @@ const createOrderInDB = async (order: Order) => {
   }
 };
 
+const calculateTotalRevenue = async () => {
+  try {
+    const result = await OrderModel.aggregate([
+      {
+        $lookup: {
+          from: 'cars', // The name of the cars collection in MongoDB
+          localField: 'car', // Field in orders
+          foreignField: '_id', // Field in cars
+          as: 'carDetails',
+        },
+      },
+      {
+        $unwind: '$carDetails', // Flatten the carDetails array
+      },
+      {
+        $project: {
+          _id: 0,
+          revenue: {
+            $multiply: ['$quantity', '$carDetails.price'], // Calculate revenue for each order
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: '$revenue' }, // Sum up all revenue values
+        },
+      },
+    ]);
+
+    return result.length > 0 ? result[0].totalRevenue : 0; // Return totalRevenue or 0 if no orders
+  } catch (err) {
+    console.error('Error calculating revenue:', err);
+    throw new Error('Error calculating revenue');
+  }
+};
+
 export const orderServices = {
   updateCarInventoryInDB,
   createOrderInDB,
+  calculateTotalRevenue,
 };
