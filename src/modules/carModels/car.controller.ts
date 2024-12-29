@@ -12,7 +12,11 @@ const createCars = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    console.log(err);
+    res.json({
+      message: 'Car creation failed',
+      success: false,
+      error: err,
+    });
   }
 };
 
@@ -33,7 +37,11 @@ const getAllCars = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    console.log(err);
+    res.json({
+      message: 'Car retrieved failed',
+      success: false,
+      error: err,
+    });
   }
 };
 
@@ -47,7 +55,11 @@ const getSingleCar = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    console.log(err);
+    res.json({
+      message: 'Car retrieved failed',
+      success: false,
+      error: err,
+    });
   }
 };
 
@@ -63,7 +75,11 @@ const updateCar = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    console.log(err);
+    res.json({
+      message: 'Car update failed',
+      success: false,
+      error: err,
+    });
   }
 };
 
@@ -77,7 +93,11 @@ const deleteCar = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    console.log(err);
+    res.json({
+      message: 'Car deletion failed',
+      success: false,
+      error: err,
+    });
   }
 };
 
