@@ -17,7 +17,7 @@ const getAllCarsFromDB = async (filters: {
   model?: string;
 }) => {
   try {
-    const query: any = {};
+    const query: Record<string, string> = {};
 
     if (filters.category) {
       query.category = filters.category;
@@ -37,7 +37,18 @@ const getAllCarsFromDB = async (filters: {
   }
 };
 
+const getSingleCarFromDB = async (carId: string) => {
+  try {
+    const result = await CarModel.findOne({ _id: carId });
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw new Error('Error getting single car from DB');
+  }
+};
+
 export const createCarServices = {
   createCarInDB,
   getAllCarsFromDB,
+  getSingleCarFromDB,
 };

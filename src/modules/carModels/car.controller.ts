@@ -37,7 +37,22 @@ const getAllCars = async (req: Request, res: Response) => {
   }
 };
 
+const getSingleCar = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.carId;
+    const result = await createCarServices.getSingleCarFromDB(id);
+    res.status(200).json({
+      message: 'Car retrieved successfully',
+      success: true,
+      data: result,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const carModels = {
   createCars,
   getAllCars,
+  getSingleCar,
 };
