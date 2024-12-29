@@ -11,6 +11,33 @@ const createCarInDB = async (car: Cars) => {
   }
 };
 
+const getAllCarsFromDB = async (filters: {
+  category?: string;
+  brand?: string;
+  model?: string;
+}) => {
+  try {
+    const query: any = {};
+
+    if (filters.category) {
+      query.category = filters.category;
+    }
+    if (filters.brand) {
+      query.brand = filters.brand;
+    }
+    if (filters.model) {
+      query.model = filters.model;
+    }
+
+    const result = await CarModel.find(query);
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw new Error('Error getting all cars from DB');
+  }
+};
+
 export const createCarServices = {
   createCarInDB,
+  getAllCarsFromDB,
 };
