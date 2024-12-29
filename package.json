@@ -5,7 +5,6 @@
   "scripts": {
     "start:prod": "nodemon ./dist/server.js",
     "start:dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
-    "build": "tsc",
     "lint": "eslint src",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "test": "echo \"Error: no test specified\" && exit 1"
