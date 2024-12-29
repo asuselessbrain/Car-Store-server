@@ -59,9 +59,20 @@ const updateCarInDB = async (id: string, data: Cars) => {
   }
 };
 
+const deleteCarFromDB = async (id: string) => {
+  try {
+    const result = await CarModel.findOneAndDelete({ _id: id });
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw new Error('Error updating car in DB');
+  }
+};
+
 export const createCarServices = {
   createCarInDB,
   getAllCarsFromDB,
   getSingleCarFromDB,
   updateCarInDB,
+  deleteCarFromDB,
 };
