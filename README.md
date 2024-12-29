@@ -53,9 +53,31 @@ Access the live application here: **[Car Store Application](https://assignment-2
     ```
 5. **Access the API:**
     Open your browser or API client and navigate to `http://localhost:5000/api/cars`.
-
 ---
 
+## Directory Structure
+```
+src/
+├── config
+│   ├── index.ts
+├── modules
+│   ├── carModels
+│   │   ├── car.interface.ts
+│   │   ├── car.model.ts
+│   │   ├── car.router.ts
+│   │   ├── car.controller.ts
+│   │   ├── car.services.ts
+│   ├── order
+│   │   ├── order.interface.ts
+│   │   ├── order.model.ts
+│   │   ├── order.router.ts
+│   │   ├── order.controller.ts
+│   │   ├── order.services.ts
+├── app.ts
+├── server.ts
+```
+
+---
 
 ## Models
 
