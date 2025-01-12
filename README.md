@@ -6,7 +6,7 @@ Develop an Express application with TypeScript, integrating MongoDB with Mongoos
 ---
 
 ## Live Link
-Access the live application here: **[Car Store Application](https://assignment-2-nine-inky.vercel.app/)**
+Access the live application here: **[Car Store Application](https://car-store-server-by-arfan.vercel.app/)**
 
 ---
 
