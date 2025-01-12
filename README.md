@@ -132,7 +132,7 @@ totalPrice: number // The total price (car price * quantity).
 **Method:** `GET`
 
 ### 4. Update a Car
-**Endpoint:** `/api/cars/update-car/:carId`
+**Endpoint:** `/api/cars/:carId`
 **Method:** `PUT`
 **Request Body:** Car details to update.
 
