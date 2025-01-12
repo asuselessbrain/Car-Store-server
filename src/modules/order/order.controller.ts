@@ -3,7 +3,7 @@ import { orderServices } from './order.services';
 
 const createOrder = async (req: Request, res: Response) => {
   try {
-    const { orders } = req.body;
+    const orders = req.body;
 
     // Validate order data
     if (!orders || !orders.car || !orders.quantity) {

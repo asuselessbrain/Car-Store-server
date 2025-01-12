@@ -106,7 +106,7 @@ totalPrice: number // The total price (car price * quantity).
 ## API Endpoints
 
 ### 1. Create a Car
-**Endpoint:** `/api/cars/create-cars`
+**Endpoint:** `/api/cars`
 **Method:** `POST`
 **Request Body:**
 ```json
@@ -137,11 +137,11 @@ totalPrice: number // The total price (car price * quantity).
 **Request Body:** Car details to update.
 
 ### 5. Delete a Car
-**Endpoint:** `/api/cars/delete-car/:carId`
+**Endpoint:** `/api/cars/:carId`
 **Method:** `DELETE`
 
 ### 6. Order a Car
-**Endpoint:** `/api/orders/create-order`
+**Endpoint:** `/api/orders`
 **Method:** `POST`
 **Request Body:**
 ```json
