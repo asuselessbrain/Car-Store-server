@@ -3,7 +3,7 @@ import { createCarServices } from './car.services';
 
 const createCars = async (req: Request, res: Response) => {
   try {
-    const car = req.body.cars;
+    const car = req.body;
 
     const result = await createCarServices.createCarInDB(car);
     res.status(200).json({
