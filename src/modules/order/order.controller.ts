@@ -7,10 +7,11 @@ const createOrder = async (req: Request, res: Response) => {
 
     // Validate order data
     if (!orders || !orders.car || !orders.quantity) {
-      return res.status(400).json({
+      res.status(400).json({
         message: 'Invalid order data. "car" and "quantity" are required.',
         success: false,
       });
+      return;
     }
 
     const { car, quantity } = orders;
@@ -21,10 +22,11 @@ const createOrder = async (req: Request, res: Response) => {
       quantity,
     );
     if (!updatedCar) {
-      return res.status(404).json({
+      res.status(404).json({
         message: 'Car not found or inventory update failed.',
         success: false,
       });
+      return;
     }
 
     // Create the order
@@ -38,10 +40,12 @@ const createOrder = async (req: Request, res: Response) => {
   } catch (err) {
     console.error('Error during order creation:', err);
 
+    const error = err as Error;
+
     res.status(500).json({
       message: 'Order creation failed',
       success: false,
-      error: err,
+      error: error.message,
     });
   }
 };

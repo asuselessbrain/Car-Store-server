@@ -1,5 +1,5 @@
 import { CarModel } from '../carModels/car.model';
-import { Order } from './order.interface';
+import { IOrder } from './order.interface';
 import { OrderModel } from './order.medel';
 
 const updateCarInventoryInDB = async (carId: string, orderQuantity: number) => {
@@ -13,6 +13,7 @@ const updateCarInventoryInDB = async (carId: string, orderQuantity: number) => {
       throw new Error('Insufficient stock');
     }
 
+    // Update car inventory
     car.quantity -= orderQuantity;
     car.inStock = car.quantity > 0;
 
@@ -24,7 +25,7 @@ const updateCarInventoryInDB = async (carId: string, orderQuantity: number) => {
   }
 };
 
-const createOrderInDB = async (order: Order) => {
+const createOrderInDB = async (order: IOrder) => {
   try {
     const result = await OrderModel.create(order);
     return result;
