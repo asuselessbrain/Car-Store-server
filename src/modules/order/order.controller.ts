@@ -8,9 +8,10 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
   const orders = req.body;
 
   // Validate order data
-  if (!orders || !orders.car || !orders.quantity) {
+  if (!orders || !orders.car || !orders.quantity || !orders.userId) {
     res.status(400).json({
-      message: 'Invalid order data. "car" and "quantity" are required.',
+      message:
+        'Invalid order data. "car", "quantity" and "userId" are required.',
       success: false,
     });
     return;
@@ -38,6 +39,28 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllOrders = catchAsync(async (req: Request, res: Response) => {
+  const orders = await orderServices.getAllOrdersFromDB();
+
+  responser(res, {
+    statusCode: StatusCodes.OK,
+    message: 'Users getting successfully',
+    data: orders,
+  });
+});
+
+const getOrderByEmail = catchAsync(async (req: Request, res: Response) => {
+  const email = req.params.email;
+
+  const orders = await orderServices.getOrderByEmailFromDB(email);
+
+  responser(res, {
+    statusCode: StatusCodes.OK,
+    message: 'Orders retrieved successfully',
+    data: orders,
+  });
+});
+
 const getRevenue = async (req: Request, res: Response) => {
   try {
     const totalRevenue = await orderServices.calculateTotalRevenue();
@@ -60,18 +83,9 @@ const getRevenue = async (req: Request, res: Response) => {
   }
 };
 
-const getAllOrders = catchAsync(async (req: Request, res: Response) => {
-  const orders = await orderServices.getAllOrdersFromDB();
-
-  responser(res, {
-    statusCode: StatusCodes.OK,
-    message: 'Users getting successfully',
-    data: orders,
-  });
-});
-
 export const orderController = {
   createOrder,
   getAllOrders,
   getRevenue,
+  getOrderByEmail,
 };

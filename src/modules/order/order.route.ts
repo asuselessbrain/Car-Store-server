@@ -6,8 +6,15 @@ import { USER_ROLE } from '../userModels/user.constants';
 
 const orderRoute = express.Router();
 
-// orderRoute.post('/create-order', orderController.createOrder);
-orderRoute.post('/', orderController.createOrder);
+// user routes
+orderRoute.post('/', auth(USER_ROLE.user), orderController.createOrder);
+orderRoute.get(
+  '/my-orders',
+  auth(USER_ROLE.user),
+  orderController.getOrderByEmail,
+);
+
+// only for admin
 orderRoute.get('/revenue', auth(USER_ROLE.admin), orderController.getRevenue);
 orderRoute.get('/', auth(USER_ROLE.admin), orderController.getAllOrders);
 

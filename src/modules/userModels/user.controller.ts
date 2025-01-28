@@ -44,6 +44,7 @@ const getSingleUser = catchAsync(async (req: Request, res: Response) => {
 const updateUser = catchAsync(async (req: Request, res: Response) => {
   const userId = req.params.userId;
   const body = req.body;
+  body.role = 'user';
   const result = await userService.updateUser(userId, body);
 
   responser(res, {
