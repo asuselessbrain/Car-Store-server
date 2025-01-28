@@ -4,6 +4,7 @@ type IData<T> = {
   statusCode: number;
   message: string;
   success?: boolean;
+  token?: string;
   data: T | T[] | null;
 };
 
@@ -12,6 +13,7 @@ export const responser = <T>(res: Response, data: IData<T>) => {
     success: true,
     statusCode: data.statusCode,
     message: 'Car created successfully',
+    token: data.token,
     data: data.data,
   });
 };
