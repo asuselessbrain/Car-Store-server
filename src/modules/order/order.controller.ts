@@ -73,8 +73,6 @@ const getRevenue = async (req: Request, res: Response) => {
       },
     });
   } catch (err) {
-    console.error('Error fetching revenue:', err);
-
     res.status(500).json({
       message: 'Failed to calculate revenue',
       status: false,

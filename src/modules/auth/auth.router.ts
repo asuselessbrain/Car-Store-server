@@ -24,5 +24,10 @@ authRouter.post(
   validateRequest(AuthValidation.passwordChangeValidationSchema),
   AuthControllers.changePassword,
 );
+authRouter.post(
+  '/generate-new-token',
+  validateRequest(AuthValidation.tokenValidation),
+  AuthControllers.generateTokenUsingRefreshToken,
+);
 
 export default authRouter;

@@ -46,7 +46,15 @@ const login = async (payload: { email: string; password: string }) => {
     expiresIn: '1d',
   });
 
-  return { token, user };
+  const refreshToken = jwt.sign(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    {
+      expiresIn: '365d',
+    },
+  );
+
+  return { token, user, refreshToken };
 };
 
 const changePassword = async (
@@ -96,8 +104,50 @@ const changePassword = async (
   return null;
 };
 
+const generateTokenUsingRefreshToken = async (token: string) => {
+  // checking if the token is missing
+  if (!token) {
+    throw new Error('You are not authorized!');
+  }
+
+  // checking if the given token is valid
+  const decoded = jwt.verify(
+    token,
+    config.jwt_refresh_secret as string,
+  ) as JwtPayload;
+
+  const { email } = decoded;
+
+  // checking if the user is exist
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new Error('This user is not found !');
+  }
+
+  // checking if the user is inactive
+  const userStatus = user?.userStatus;
+
+  if (userStatus === 'inactive') {
+    throw new Error('This user is blocked ! !');
+  }
+
+  //create token and sent to the  client
+  const jwtPayload = {
+    email: user?.email,
+    role: user?.role,
+  };
+
+  const newToken = jwt.sign(jwtPayload, config.jwt_secret as string, {
+    expiresIn: '1d',
+  });
+
+  return { newToken, user };
+};
+
 export const AuthService = {
   register,
   login,
   changePassword,
+  generateTokenUsingRefreshToken,
 };
