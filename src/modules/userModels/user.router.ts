@@ -20,7 +20,7 @@ const userRouter = Router();
 //   }
 // };
 
-userRouter.post('/create-admin', userController.createUser);
+// userRouter.post('/create-admin', userController.createUser);
 userRouter.get('/:userId', userController.getSingleUser);
 userRouter.put('/:userId', userController.updateUser);
 userRouter.delete('/:userId', userController.deleteUser);

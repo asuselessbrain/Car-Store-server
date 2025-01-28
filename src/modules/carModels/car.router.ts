@@ -1,6 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { carModels } from './car.controller';
 import { carValidationSchema } from './car.validator';
+import auth from '../../middlewares/auth';
+import { USER_ROLE } from '../userModels/user.constants';
 
 const router = express.Router();
 
@@ -17,10 +19,10 @@ const carValidator = async (
   }
 };
 
-router.post('/', carValidator, carModels.createCars);
+router.post('/', carValidator, auth(USER_ROLE.admin), carModels.createCars);
 router.get('/', carModels.getAllCars);
 router.get('/:carId', carModels.getSingleCar);
-router.put('/:carId', carModels.updateCar);
-router.delete('/:carId', carModels.deleteCar);
+router.put('/:carId', auth(USER_ROLE.admin), carModels.updateCar);
+router.delete('/:carId', auth(USER_ROLE.admin), carModels.deleteCar);
 
 export const routers = router;
