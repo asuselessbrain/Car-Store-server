@@ -12,7 +12,7 @@ export const responser = <T>(res: Response, data: IData<T>) => {
   res.status(data.statusCode).json({
     success: true,
     statusCode: data.statusCode,
-    message: 'Car created successfully',
+    message: data.message,
     token: data.token,
     data: data.data,
   });
