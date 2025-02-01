@@ -6,10 +6,10 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../../utils/catchAsync';
 import { responser } from '../../utils/responser';
 
-const createUser = catchAsync(async (req: Request, res: Response) => {
+const createAdmin = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
 
-  const result = await userService.createUser(payload);
+  const result = await userService.createAdmin(payload);
 
   responser(res, {
     statusCode: StatusCodes.CREATED,
@@ -64,10 +64,24 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const blockUser = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+  const body = req.body;
+  // await userService.deleteUser(userId);
+  const result = await userService.blockUser(userId, body);
+
+  responser(res, {
+    statusCode: StatusCodes.OK,
+    message: 'User Blocked',
+    data: result,
+  });
+});
+
 export const userController = {
-  createUser,
+  createAdmin,
   getUser,
   getSingleUser,
   updateUser,
   deleteUser,
+  blockUser,
 };

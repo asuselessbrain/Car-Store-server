@@ -20,10 +20,19 @@ const userRouter = Router();
 //   }
 // };
 
-// userRouter.post('/create-admin', userController.createUser);
+userRouter.post(
+  '/create-admin',
+  auth(USER_ROLE.admin),
+  userController.createAdmin,
+);
 userRouter.get('/:userId', userController.getSingleUser);
 userRouter.put('/:userId', userController.updateUser);
-userRouter.delete('/:userId', userController.deleteUser);
+userRouter.delete('/:userId', auth(USER_ROLE.admin), userController.deleteUser);
+userRouter.put(
+  '/block-user/:userId',
+  auth(USER_ROLE.admin),
+  userController.blockUser,
+);
 userRouter.get('/', auth(USER_ROLE.admin), userController.getUser);
 
 export default userRouter;
