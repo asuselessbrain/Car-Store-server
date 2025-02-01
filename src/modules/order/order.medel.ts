@@ -16,7 +16,7 @@ const orderSchema = new Schema<IOrder>(
     status: {
       type: String,
       enum: {
-        values: ['in-progress', 'delivered'],
+        values: ['in-progress', 'delivered', 'cancelled'],
         message: '{VALUE} is not valid, please provide a valid status',
       },
       default: 'in-progress',

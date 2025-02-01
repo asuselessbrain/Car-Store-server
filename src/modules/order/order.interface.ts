@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 export type IOrder = {
   car: mongoose.Schema.Types.ObjectId;
   userId: mongoose.Schema.Types.ObjectId;
-  status: 'in-progress' | 'delivered';
+  status: 'in-progress' | 'delivered' | 'cancelled';
   quantity: number;
   totalPrice: number;
 };
