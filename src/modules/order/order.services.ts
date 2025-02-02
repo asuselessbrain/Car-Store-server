@@ -63,8 +63,16 @@ const updateStatus = async (id: string) => {
   return result;
 };
 
-const getOrderByEmailFromDB = async (email: string) => {
-  const result = await OrderModel.find({ email });
+const updateStatusByUser = async (id: string) => {
+  const data = { status: 'cancelled' };
+  const result = await OrderModel.findByIdAndUpdate(id, data, {
+    new: true,
+  });
+  return result;
+};
+
+const getOrderByIdFromDB = async (userId: string) => {
+  const result = await OrderModel.find({ userId }).populate('car');
   return result;
 };
 
@@ -73,6 +81,7 @@ export const orderServices = {
   createOrderInDB,
   calculateTotalRevenue,
   getAllOrdersFromDB,
-  getOrderByEmailFromDB,
+  getOrderByIdFromDB,
   updateStatus,
+  updateStatusByUser,
 };

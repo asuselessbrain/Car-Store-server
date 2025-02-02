@@ -53,10 +53,12 @@ const getAllOrders = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getOrderByEmail = catchAsync(async (req: Request, res: Response) => {
-  const email = req.params.email;
+const getOrderById = catchAsync(async (req: Request, res: Response) => {
+  const userInfo = req.user;
 
-  const orders = await orderServices.getOrderByEmailFromDB(email);
+  const id = userInfo?.id;
+
+  const orders = await orderServices.getOrderByIdFromDB(id);
 
   responser(res, {
     statusCode: StatusCodes.OK,
@@ -92,7 +94,19 @@ const updateStatus = catchAsync(async (req: Request, res: Response) => {
 
   responser(res, {
     statusCode: StatusCodes.OK,
-    message: 'Role Updated Successfully',
+    message: 'Update delivery status successfully',
+    data: result,
+  });
+});
+
+const updateStatusByUser = catchAsync(async (req: Request, res: Response) => {
+  const orderId = req.params.orderId;
+  // await userService.deleteUser(userId);
+  const result = await orderServices.updateStatusByUser(orderId);
+
+  responser(res, {
+    statusCode: StatusCodes.OK,
+    message: 'Update delivery status successfully',
     data: result,
   });
 });
@@ -101,6 +115,7 @@ export const orderController = {
   createOrder,
   getAllOrders,
   getRevenue,
-  getOrderByEmail,
+  getOrderById,
+  updateStatusByUser,
   updateStatus,
 };
