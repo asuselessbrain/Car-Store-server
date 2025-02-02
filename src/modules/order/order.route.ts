@@ -17,5 +17,10 @@ orderRoute.get(
 // only for admin
 orderRoute.get('/revenue', auth(USER_ROLE.admin), orderController.getRevenue);
 orderRoute.get('/', auth(USER_ROLE.admin), orderController.getAllOrders);
+orderRoute.put(
+  '/update-status/:orderId',
+  auth(USER_ROLE.admin),
+  orderController.updateStatus,
+);
 
 export const orderRouter = orderRoute;

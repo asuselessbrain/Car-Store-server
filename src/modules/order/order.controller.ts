@@ -85,9 +85,22 @@ const getRevenue = async (req: Request, res: Response) => {
   }
 };
 
+const updateStatus = catchAsync(async (req: Request, res: Response) => {
+  const orderId = req.params.orderId;
+  // await userService.deleteUser(userId);
+  const result = await orderServices.updateStatus(orderId);
+
+  responser(res, {
+    statusCode: StatusCodes.OK,
+    message: 'Role Updated Successfully',
+    data: result,
+  });
+});
+
 export const orderController = {
   createOrder,
   getAllOrders,
   getRevenue,
   getOrderByEmail,
+  updateStatus,
 };

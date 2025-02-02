@@ -13,6 +13,15 @@ const orderSchema = new Schema<IOrder>(
       ref: 'User',
       required: [true, 'User ID is required'],
     },
+    status: {
+      type: String,
+      enum: {
+        values: ['in-progress', 'delivered', 'cancelled'],
+        message: '{VALUE} is not valid, please provide a valid status',
+      },
+      default: 'in-progress',
+      required: true,
+    },
     quantity: { type: Number, required: true },
     totalPrice: { type: Number, required: true },
   },

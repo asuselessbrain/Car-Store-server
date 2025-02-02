@@ -6,10 +6,10 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../../utils/catchAsync';
 import { responser } from '../../utils/responser';
 
-const createUser = catchAsync(async (req: Request, res: Response) => {
+const createAdmin = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
 
-  const result = await userService.createUser(payload);
+  const result = await userService.createAdmin(payload);
 
   responser(res, {
     statusCode: StatusCodes.CREATED,
@@ -78,7 +78,7 @@ const blockUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const userController = {
-  createUser,
+  createAdmin,
   getUser,
   getSingleUser,
   updateUser,

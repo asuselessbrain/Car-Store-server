@@ -55,6 +55,14 @@ const calculateTotalRevenue = async () => {
   return result[0].totalRevenue;
 };
 
+const updateStatus = async (id: string) => {
+  const data = { status: 'delivered' };
+  const result = await OrderModel.findByIdAndUpdate(id, data, {
+    new: true,
+  });
+  return result;
+};
+
 const getOrderByEmailFromDB = async (email: string) => {
   const result = await OrderModel.find({ email });
   return result;
@@ -66,4 +74,5 @@ export const orderServices = {
   calculateTotalRevenue,
   getAllOrdersFromDB,
   getOrderByEmailFromDB,
+  updateStatus,
 };
