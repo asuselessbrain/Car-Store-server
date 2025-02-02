@@ -1,4 +1,5 @@
 import { CarModel } from '../carModels/car.model';
+import { IUser } from '../userModels/user.interface';
 import { IOrder } from './order.interface';
 import { OrderModel } from './order.medel';
 
@@ -20,8 +21,20 @@ const updateCarInventoryInDB = async (carId: string, orderQuantity: number) => {
   return updatedCar;
 };
 
-const createOrderInDB = async (order: IOrder) => {
-  const result = await OrderModel.create(order);
+const createOrderInDB = async (user: IUser, order: IOrder) => {
+  if (!order.car) {
+    throw new Error('Car is required');
+  }
+  const car = await CarModel.findById(order.car);
+
+  const OrderData = {
+    userId: user._id,
+    totalPrice: order.quantity * Number(car?.price),
+    car: order.car,
+    quantity: order.quantity,
+  };
+
+  const result = await OrderModel.create(OrderData);
   return result;
 };
 

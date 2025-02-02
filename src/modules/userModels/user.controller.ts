@@ -64,10 +64,24 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const blockUser = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+  const body = req.body;
+  // await userService.deleteUser(userId);
+  const result = await userService.blockUser(userId, body);
+
+  responser(res, {
+    statusCode: StatusCodes.OK,
+    message: 'User Blocked',
+    data: result,
+  });
+});
+
 export const userController = {
   createUser,
   getUser,
   getSingleUser,
   updateUser,
   deleteUser,
+  blockUser,
 };

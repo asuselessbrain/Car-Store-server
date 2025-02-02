@@ -30,10 +30,18 @@ const deleteUser = async (id: string) => {
   return result;
 };
 
+const blockUser = async (id: string, data: IUser) => {
+  const result = await User.findByIdAndUpdate(id, data, {
+    new: true,
+  });
+  return result;
+};
+
 export const userService = {
   createUser,
   getUser,
   getSingleUser,
   updateUser,
   deleteUser,
+  blockUser,
 };

@@ -3,15 +3,16 @@ import { orderServices } from './order.services';
 import { catchAsync } from '../../utils/catchAsync';
 import { responser } from '../../utils/responser';
 import { StatusCodes } from 'http-status-codes';
+import { IUser } from '../userModels/user.interface';
 
 const createOrder = catchAsync(async (req: Request, res: Response) => {
   const orders = req.body;
+  const userId = req.user;
 
   // Validate order data
-  if (!orders || !orders.car || !orders.quantity || !orders.userId) {
+  if (!orders || !orders.car || !orders.quantity) {
     res.status(400).json({
-      message:
-        'Invalid order data. "car", "quantity" and "userId" are required.',
+      message: 'Invalid order data. "car", "quantity" are required.',
       success: false,
     });
     return;
@@ -30,7 +31,10 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
   }
 
   // Create the order
-  const createdOrder = await orderServices.createOrderInDB(orders);
+  const createdOrder = await orderServices.createOrderInDB(
+    userId as IUser,
+    orders,
+  );
 
   responser(res, {
     statusCode: StatusCodes.OK,
