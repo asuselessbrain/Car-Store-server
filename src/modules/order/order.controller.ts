@@ -89,7 +89,7 @@ const getRevenue = async (req: Request, res: Response) => {
 
 const updateStatus = catchAsync(async (req: Request, res: Response) => {
   const orderId = req.params.orderId;
-  // await userService.deleteUser(userId);
+
   const result = await orderServices.updateStatus(orderId);
 
   responser(res, {

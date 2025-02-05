@@ -26,7 +26,7 @@ orderRoute.put(
 orderRoute.put(
   '/cancel-order/:orderId',
   auth(USER_ROLE.user),
-  orderController.updateStatus,
+  orderController.updateStatusByUser,
 );
 
 export const orderRouter = orderRoute;

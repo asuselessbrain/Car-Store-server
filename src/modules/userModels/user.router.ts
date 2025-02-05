@@ -25,8 +25,17 @@ userRouter.post(
   auth(USER_ROLE.admin),
   userController.createAdmin,
 );
-userRouter.get('/:userId', userController.getSingleUser);
-userRouter.put('/:userId', userController.updateUser);
+userRouter.get(
+  '/get-single-user',
+  auth(USER_ROLE.user),
+  userController.getSingleUser,
+);
+userRouter.put('/:userId', auth(USER_ROLE.user), userController.updateUser);
+userRouter.put(
+  '/change-password/:id',
+  auth(USER_ROLE.user),
+  userController.changePassword,
+);
 userRouter.delete('/:userId', auth(USER_ROLE.admin), userController.deleteUser);
 userRouter.put(
   '/block-user/:userId',

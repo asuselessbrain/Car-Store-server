@@ -29,7 +29,7 @@ const getUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingleUser = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.params.userId;
+  const userId = req.user?._id;
 
   const result = await userService.getSingleUser(userId);
 
@@ -44,11 +44,14 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
   const userId = req.params.userId;
   const body = req.body;
   body.role = 'user';
+  body.email = req?.user?.email;
+  body.userStatus = req?.user?.userStatus;
+
   const result = await userService.updateUser(userId, body);
 
   responser(res, {
     statusCode: StatusCodes.OK,
-    message: 'User updated successfully',
+    message: 'User name updated successfully',
     data: result,
   });
 });
@@ -77,6 +80,22 @@ const blockUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const changePassword = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.id;
+  const { oldPassword, newPassword } = req.body;
+
+  const result = await userService.changePassword(userId, {
+    oldPassword,
+    newPassword,
+  });
+
+  responser(res, {
+    statusCode: StatusCodes.OK,
+    message: 'Password updated successfully',
+    data: result,
+  });
+});
+
 export const userController = {
   createAdmin,
   getUser,
@@ -84,4 +103,5 @@ export const userController = {
   updateUser,
   deleteUser,
   blockUser,
+  changePassword,
 };

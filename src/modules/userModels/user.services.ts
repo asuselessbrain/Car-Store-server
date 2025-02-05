@@ -1,5 +1,7 @@
+import config from '../../config';
 import { IUser } from './user.interface';
 import User from './user.model';
+import bcrypt from 'bcrypt';
 
 const createAdmin = async (payload: IUser): Promise<IUser> => {
   payload.role = 'admin';
@@ -25,6 +27,45 @@ const updateUser = async (id: string, data: IUser) => {
   return result;
 };
 
+const changePassword = async (
+  id: string,
+  data: { oldPassword: string; newPassword: string },
+) => {
+  const oldPassword = data?.oldPassword;
+  const newPassword = data?.newPassword;
+
+  const user = await User.findById(id).select('+password');
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  const passwordMatch = await bcrypt.compare(
+    oldPassword,
+    user?.password as string,
+  );
+
+  if (!passwordMatch) {
+    throw new Error('Incorrect old password');
+  }
+
+  if (passwordMatch) {
+    const hashedPassword = await bcrypt.hash(
+      newPassword,
+      Number(config.bcrypt_salt_rounds),
+    );
+    const result = await User.findByIdAndUpdate(
+      user?._id,
+      {
+        password: hashedPassword,
+      },
+      { new: true },
+    );
+
+    return result;
+  }
+};
+
 const deleteUser = async (id: string) => {
   const result = await User.findByIdAndDelete(id);
   return result;
@@ -44,4 +85,5 @@ export const userService = {
   updateUser,
   deleteUser,
   blockUser,
+  changePassword,
 };
