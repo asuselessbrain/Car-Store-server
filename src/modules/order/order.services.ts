@@ -47,12 +47,47 @@ const calculateTotalRevenue = async () => {
   const result = await OrderModel.aggregate([
     {
       $group: {
-        _id: null,
+        _id: {
+          year: { $year: '$createdAt' },
+          month: { $month: '$createdAt' },
+        },
         totalRevenue: { $sum: '$totalPrice' },
       },
     },
+    { $sort: { '_id.year': 1, '_id.month': 1 } },
   ]);
-  return result[0].totalRevenue;
+  return result.map(({ _id, totalRevenue }) => ({
+    year: _id.year,
+    month: _id.month,
+    totalRevenue,
+  }));
+};
+
+const sellByBrand = async () => {
+  const result = await OrderModel.aggregate([
+    {
+      $lookup: {
+        from: 'cars',
+        localField: 'car',
+        foreignField: '_id',
+        as: 'brandDetails',
+      },
+    },
+    {
+      $unwind: '$brandDetails', // Unwind the result of the lookup to access brand details
+    },
+    {
+      $group: {
+        _id: '$brandDetails.brand', // Group by the brand name (adjust to match field in 'brands' collection)
+        orderCount: { $sum: '$quantity' },
+      },
+    },
+    {
+      $sort: { orderCount: -1 },
+    },
+  ]);
+
+  return result.map(({ _id, orderCount }) => ({ brand: _id, orderCount }));
 };
 
 const updateStatus = async (id: string) => {
@@ -84,4 +119,5 @@ export const orderServices = {
   getOrderByIdFromDB,
   updateStatus,
   updateStatusByUser,
+  sellByBrand,
 };

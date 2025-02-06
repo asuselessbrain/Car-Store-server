@@ -87,6 +87,24 @@ const getRevenue = async (req: Request, res: Response) => {
   }
 };
 
+const sellByBrand = async (req: Request, res: Response) => {
+  try {
+    const sellCountByBrand = await orderServices.sellByBrand();
+
+    res.status(200).json({
+      message: 'Sell by brand counted product retrieved successfully',
+      status: true,
+      data: sellCountByBrand,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: 'Failed to calculate revenue',
+      status: false,
+      error: err,
+    });
+  }
+};
+
 const updateStatus = catchAsync(async (req: Request, res: Response) => {
   const orderId = req.params.orderId;
 
@@ -118,4 +136,5 @@ export const orderController = {
   getOrderById,
   updateStatusByUser,
   updateStatus,
+  sellByBrand,
 };

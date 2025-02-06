@@ -16,6 +16,11 @@ orderRoute.get(
 
 // only for admin
 orderRoute.get('/revenue', auth(USER_ROLE.admin), orderController.getRevenue);
+orderRoute.get(
+  '/sell-count-by-brand',
+  auth(USER_ROLE.admin),
+  orderController.sellByBrand,
+);
 orderRoute.get('/', auth(USER_ROLE.admin), orderController.getAllOrders);
 
 orderRoute.put(
