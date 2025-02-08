@@ -48,7 +48,7 @@ const getAllOrders = catchAsync(async (req: Request, res: Response) => {
 
   responser(res, {
     statusCode: StatusCodes.OK,
-    message: 'Users getting successfully',
+    message: 'Order getting successfully',
     data: orders,
   });
 });
@@ -70,6 +70,26 @@ const getOrderById = catchAsync(async (req: Request, res: Response) => {
 const getRevenue = async (req: Request, res: Response) => {
   try {
     const totalRevenue = await orderServices.calculateTotalRevenue();
+
+    res.status(200).json({
+      message: 'Revenue calculated successfully',
+      status: true,
+      data: {
+        totalRevenue,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: 'Failed to calculate revenue',
+      status: false,
+      error: err,
+    });
+  }
+};
+
+const totalRevenue = async (req: Request, res: Response) => {
+  try {
+    const totalRevenue = await orderServices.totalRevenue();
 
     res.status(200).json({
       message: 'Revenue calculated successfully',
@@ -137,4 +157,5 @@ export const orderController = {
   updateStatusByUser,
   updateStatus,
   sellByBrand,
+  totalRevenue,
 };

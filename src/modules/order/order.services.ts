@@ -63,6 +63,19 @@ const calculateTotalRevenue = async () => {
   }));
 };
 
+const totalRevenue = async () => {
+  const result = await OrderModel.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalRevenue: { $sum: '$totalPrice' },
+      },
+    },
+    { $sort: { '_id.year': 1, '_id.month': 1 } },
+  ]);
+  return result[0];
+};
+
 const sellByBrand = async () => {
   const result = await OrderModel.aggregate([
     {
@@ -120,4 +133,5 @@ export const orderServices = {
   updateStatus,
   updateStatusByUser,
   sellByBrand,
+  totalRevenue,
 };

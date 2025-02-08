@@ -7,19 +7,6 @@ import { USER_ROLE } from './user.constants';
 
 const userRouter = Router();
 
-// const userValidator = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction,
-// ) => {
-//   try {
-//     await userValidationSchema.parseAsync(req.body);
-//     next();
-//   } catch (err) {
-//     next(err);
-//   }
-// };
-
 userRouter.post(
   '/create-admin',
   auth(USER_ROLE.admin),
@@ -27,7 +14,7 @@ userRouter.post(
 );
 userRouter.get(
   '/get-single-user',
-  auth(USER_ROLE.user),
+  auth(USER_ROLE.user, USER_ROLE.admin),
   userController.getSingleUser,
 );
 userRouter.put('/:userId', auth(USER_ROLE.user), userController.updateUser);
