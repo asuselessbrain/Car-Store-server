@@ -8,7 +8,12 @@ const reviewSchema = new Schema<IReview>({
     ref: 'User',
   },
   ratting: { type: Number, required: [true, 'Ratting is Required!'] },
-  comment: { type: String, required: [true, 'Comment is Required!'] },
+  comment: {
+    type: String,
+    required: [true, 'Comment is Required!'],
+    minlength: 5,
+    maxlength: 80,
+  },
 });
 
 export const Review = model<IReview>('review', reviewSchema);

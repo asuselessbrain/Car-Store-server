@@ -2,6 +2,7 @@ import { CarModel } from '../carModels/car.model';
 import { IUser } from '../userModels/user.interface';
 import { IOrder } from './order.interface';
 import { OrderModel } from './order.medel';
+import { orderUtils } from './order.utils';
 
 const updateCarInventoryInDB = async (carId: string, orderQuantity: number) => {
   const car = await CarModel.findById(carId);
@@ -21,7 +22,11 @@ const updateCarInventoryInDB = async (carId: string, orderQuantity: number) => {
   return updatedCar;
 };
 
-const createOrderInDB = async (user: IUser, order: IOrder) => {
+const createOrderInDB = async (
+  user: IUser,
+  order: IOrder,
+  client_ip: string,
+) => {
   if (!order.car) {
     throw new Error('Car is required');
   }
@@ -35,7 +40,20 @@ const createOrderInDB = async (user: IUser, order: IOrder) => {
   };
 
   const result = await OrderModel.create(OrderData);
-  return result;
+
+  const spPayload = {
+    amount: OrderData.totalPrice,
+    order_id: result._id.toString(),
+    currency: 'BDT',
+    customer_name: user?.name,
+    customer_address: 'Dumki, Patuakhali',
+    customer_email: user?.email,
+    customer_phone: '017XXXXXXXX',
+    customer_city: 'Patukhali',
+    client_ip,
+  };
+  const paymentInfo = await orderUtils.paymentResult(spPayload);
+  return { result, paymentInfo };
 };
 
 const getAllOrdersFromDB = async () => {

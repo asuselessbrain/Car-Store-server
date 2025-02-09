@@ -34,6 +34,7 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
   const createdOrder = await orderServices.createOrderInDB(
     userId as IUser,
     orders,
+    req.ip!,
   );
 
   responser(res, {
