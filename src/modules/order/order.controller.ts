@@ -44,6 +44,16 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const verifyPayment = catchAsync(async (req, res) => {
+  const order = await orderServices.verifyPayment(req.query.order_id as string);
+
+  responser(res, {
+    statusCode: StatusCodes.CREATED,
+    message: 'Order verified successfully',
+    data: order,
+  });
+});
+
 const getAllOrders = catchAsync(async (req: Request, res: Response) => {
   const orders = await orderServices.getAllOrdersFromDB();
 
@@ -159,4 +169,5 @@ export const orderController = {
   updateStatus,
   sellByBrand,
   totalRevenue,
+  verifyPayment,
 };

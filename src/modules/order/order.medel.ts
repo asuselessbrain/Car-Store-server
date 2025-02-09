@@ -16,11 +16,20 @@ const orderSchema = new Schema<IOrder>(
     status: {
       type: String,
       enum: {
-        values: ['in-progress', 'delivered', 'cancelled'],
+        values: ['pending', 'paid', 'in-progress', 'delivered', 'cancelled'],
         message: '{VALUE} is not valid, please provide a valid status',
       },
-      default: 'in-progress',
+      default: 'pending',
       required: true,
+    },
+    transaction: {
+      id: String,
+      transactionStatus: String,
+      bank_status: String,
+      sp_code: String,
+      sp_message: String,
+      method: String,
+      date_time: String,
     },
     quantity: { type: Number, required: true },
     totalPrice: { type: Number, required: true },

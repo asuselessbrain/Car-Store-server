@@ -14,6 +14,8 @@ orderRoute.get(
   orderController.getOrderById,
 );
 
+orderRoute.get('/verify', auth(USER_ROLE.user), orderController.verifyPayment);
+
 // only for admin
 orderRoute.get('/revenue', auth(USER_ROLE.admin), orderController.getRevenue);
 orderRoute.get(

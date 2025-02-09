@@ -1,4 +1,4 @@
-import { VerificationResponse } from 'shurjopay';
+import { PaymentResponse, VerificationResponse } from 'shurjopay';
 import Shurjopay from 'shurjopay';
 import config from '../../config';
 
@@ -13,7 +13,7 @@ shurjopay.config(
 );
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const paymentResult = async (paymentPayload: any) => {
+const paymentResult = async (paymentPayload: any): Promise<PaymentResponse> => {
   return await new Promise((resolve, reject) => {
     shurjopay.makePayment(
       paymentPayload,

@@ -39,7 +39,7 @@ const createOrderInDB = async (
     quantity: order.quantity,
   };
 
-  const result = await OrderModel.create(OrderData);
+  let result = await OrderModel.create(OrderData);
 
   const spPayload = {
     amount: OrderData.totalPrice,
@@ -52,8 +52,17 @@ const createOrderInDB = async (
     customer_city: 'Patukhali',
     client_ip,
   };
-  const paymentInfo = await orderUtils.paymentResult(spPayload);
-  return { result, paymentInfo };
+  const payment = await orderUtils.paymentResult(spPayload);
+  if (payment?.transactionStatus) {
+    result = await result.updateOne({
+      transaction: {
+        id: payment.sp_order_id,
+        transactionStatus: payment.transactionStatus,
+      },
+    });
+  }
+
+  return payment.checkout_url;
 };
 
 const getAllOrdersFromDB = async () => {
@@ -142,6 +151,35 @@ const getOrderByIdFromDB = async (userId: string) => {
   return result;
 };
 
+const verifyPayment = async (order_id: string) => {
+  const verifiedPayment = await orderUtils.verifyPaymentAsync(order_id);
+
+  if (verifiedPayment.length) {
+    await OrderModel.findOneAndUpdate(
+      {
+        'transaction.id': order_id,
+      },
+      {
+        'transaction.bank_status': verifiedPayment[0].bank_status,
+        'transaction.sp_code': verifiedPayment[0].sp_code,
+        'transaction.sp_message': verifiedPayment[0].sp_message,
+        'transaction.transactionStatus': verifiedPayment[0].transaction_status,
+        'transaction.method': verifiedPayment[0].method,
+        'transaction.date_time': verifiedPayment[0].date_time,
+        status:
+          verifiedPayment[0].bank_status == 'Success'
+            ? 'Paid'
+            : verifiedPayment[0].bank_status == 'Failed'
+              ? 'Pending'
+              : verifiedPayment[0].bank_status == 'Cancel'
+                ? 'Cancelled'
+                : '',
+      },
+    );
+  }
+  return verifiedPayment;
+};
+
 export const orderServices = {
   updateCarInventoryInDB,
   createOrderInDB,
@@ -152,4 +190,5 @@ export const orderServices = {
   updateStatusByUser,
   sellByBrand,
   totalRevenue,
+  verifyPayment,
 };
