@@ -12,5 +12,10 @@ reviewRouter.post(
 );
 
 reviewRouter.get('/get-review', reviewController.getReview);
+reviewRouter.get(
+  '/get-single-user-review',
+  auth(USER_ROLE.user),
+  reviewController.getSingleUserReview,
+);
 
 export default reviewRouter;

@@ -132,6 +132,12 @@ const sellByBrand = async () => {
 
 const updateStatus = async (id: string) => {
   const data = { status: 'delivered' };
+  const order = await OrderModel.findById(id);
+  if (order?.paymentStatus === 'cancelled') {
+    throw new Error(
+      'The order cannot be delivered because the payment was cancelled.',
+    );
+  }
   const result = await OrderModel.findByIdAndUpdate(id, data, {
     new: true,
   });
@@ -166,13 +172,13 @@ const verifyPayment = async (order_id: string) => {
         'transaction.transactionStatus': verifiedPayment[0].transaction_status,
         'transaction.method': verifiedPayment[0].method,
         'transaction.date_time': verifiedPayment[0].date_time,
-        status:
+        paymentStatus:
           verifiedPayment[0].bank_status == 'Success'
-            ? 'Paid'
+            ? 'paid'
             : verifiedPayment[0].bank_status == 'Failed'
-              ? 'Pending'
+              ? 'pending'
               : verifiedPayment[0].bank_status == 'Cancel'
-                ? 'Cancelled'
+                ? 'cancelled'
                 : '',
       },
     );

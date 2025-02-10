@@ -19,6 +19,15 @@ const orderSchema = new Schema<IOrder>(
         values: ['pending', 'paid', 'in-progress', 'delivered', 'cancelled'],
         message: '{VALUE} is not valid, please provide a valid status',
       },
+      default: 'in-progress',
+      required: true,
+    },
+    paymentStatus: {
+      type: String,
+      enum: {
+        values: ['pending', 'paid', 'cancelled'],
+        message: '{VALUE} is not valid, please provide a valid payment',
+      },
       default: 'pending',
       required: true,
     },

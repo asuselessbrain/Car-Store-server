@@ -3,6 +3,7 @@ export type IOrder = {
   car: mongoose.Schema.Types.ObjectId;
   userId: mongoose.Schema.Types.ObjectId;
   status: 'in-progress' | 'delivered' | 'paid' | 'pending' | 'cancelled';
+  paymentStatus: 'paid' | 'pending' | 'cancelled';
   quantity: number;
   totalPrice: number;
   transaction: {

@@ -11,4 +11,9 @@ const getReview = async () => {
   return result;
 };
 
-export const reviewServices = { createReview, getReview };
+const singleUserReview = async (id: string) => {
+  const result = await Review.find({ userId: id });
+  return result;
+};
+
+export const reviewServices = { createReview, getReview, singleUserReview };
