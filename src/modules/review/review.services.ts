@@ -7,7 +7,7 @@ const createReview = async (payload: IReview) => {
 };
 
 const getReview = async () => {
-  const result = await Review.find().populate('userId');
+  const result = await Review.find().populate('userId').sort({ _id: -1 });
   return result;
 };
 

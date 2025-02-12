@@ -11,8 +11,8 @@ const reviewSchema = new Schema<IReview>({
   comment: {
     type: String,
     required: [true, 'Comment is Required!'],
-    minlength: 5,
-    maxlength: 80,
+    minlength: [50, 'Comment must be at least 50 characters long!'],
+    maxlength: [180, 'Comment cannot exceed 180 characters!'],
   },
 });
 

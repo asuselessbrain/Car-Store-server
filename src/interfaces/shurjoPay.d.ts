@@ -1,4 +1,6 @@
 declare module 'shurjopay' {
+  import { Logger } from 'winston';
+
   interface Credentials {
     root_url: string;
     merchant_username: string;

@@ -43,7 +43,7 @@ const createOrderInDB = async (
 
   const spPayload = {
     amount: OrderData.totalPrice,
-    order_id: result._id.toString(),
+    order_id: result._id,
     currency: 'BDT',
     customer_name: user?.name,
     customer_address: 'Dumki, Patuakhali',
@@ -66,7 +66,10 @@ const createOrderInDB = async (
 };
 
 const getAllOrdersFromDB = async () => {
-  const result = await OrderModel.find().populate('userId').populate('car');
+  const result = await OrderModel.find()
+    .populate('userId')
+    .populate('car')
+    .sort({ _id: -1 });
   return result;
 };
 
@@ -153,7 +156,9 @@ const updateStatusByUser = async (id: string) => {
 };
 
 const getOrderByIdFromDB = async (userId: string) => {
-  const result = await OrderModel.find({ userId }).populate('car');
+  const result = await OrderModel.find({ userId })
+    .populate('car')
+    .sort({ _id: -1 });
   return result;
 };
 

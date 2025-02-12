@@ -37,6 +37,8 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
     req.ip!,
   );
 
+  console.log(createOrder);
+
   responser(res, {
     statusCode: StatusCodes.OK,
     message: 'Order created successfully',

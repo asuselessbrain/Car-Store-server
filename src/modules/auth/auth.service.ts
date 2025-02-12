@@ -33,7 +33,7 @@ const login = async (payload: { email: string; password: string }) => {
   );
 
   if (!isPasswordMatched) {
-    throw new Error('Wrong Password!!! Tell me who are you? 😈');
+    throw new Error('Wrong Password!!! 😈');
   }
 
   //create token and sent to the  client
@@ -50,7 +50,7 @@ const login = async (payload: { email: string; password: string }) => {
     jwtPayload,
     config.jwt_refresh_secret as string,
     {
-      expiresIn: '365d',
+      expiresIn: '7d',
     },
   );
 

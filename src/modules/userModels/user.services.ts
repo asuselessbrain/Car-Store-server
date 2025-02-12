@@ -11,7 +11,7 @@ const createAdmin = async (payload: IUser): Promise<IUser> => {
 };
 
 const getUser = async () => {
-  const result = await User.find();
+  const result = await User.find().sort({ _id: -1 });
   return result;
 };
 
