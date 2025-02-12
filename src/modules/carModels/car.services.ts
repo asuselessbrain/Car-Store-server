@@ -6,25 +6,25 @@ const createCarInDB = async (car: Cars) => {
   return result;
 };
 
-const getAllCarsFromDB = async (filters: {
-  category?: string;
-  brand?: string;
-  model?: string;
-}) => {
-  const query: Record<string, string> = {};
+const getAllCarsFromDB = async (payload: Record<string, unknown>) => {
+  const queryObj = { ...payload };
 
-  if (filters.category) {
-    query.category = filters.category;
-  }
-  if (filters.brand) {
-    query.brand = filters.brand;
-  }
-  if (filters.model) {
-    query.model = filters.model;
-  }
+  const exclude = ['searchTerm'];
 
-  const result = await CarModel.find(query);
-  return result;
+  exclude.forEach((key) => delete queryObj[key]);
+
+  const searchFields = ['category', 'brand', 'model'];
+
+  const searchTerm = payload?.searchTerm || '';
+
+  const searchResult = CarModel.find({
+    $or: searchFields.map((searchField) => ({
+      [searchField]: { $regex: searchTerm, $options: 'i' },
+    })),
+  });
+
+  const filteringResult = await searchResult.find(queryObj);
+  return filteringResult;
 };
 
 const getSingleCarFromDB = async (carId: string) => {
