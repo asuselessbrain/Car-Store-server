@@ -7,6 +7,7 @@ import userRouter from './modules/userModels/user.router';
 import authRouter from './modules/auth/auth.router';
 import cookieParser from 'cookie-parser';
 import reviewRouter from './modules/review/review.router';
+import contactRouter from './modules/contact/contact.route';
 const app = express();
 
 app.use(express.json());
@@ -27,6 +28,7 @@ app.use('/api/cars', routers);
 app.use('/api/orders', orderRouter);
 app.use('/api/user', userRouter);
 app.use('/api/review', reviewRouter);
+app.use('/api/contact', contactRouter);
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!');
 });

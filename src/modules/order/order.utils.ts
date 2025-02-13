@@ -30,7 +30,6 @@ const verifyPaymentAsync = (
       order_id,
       (response) => resolve(response),
       (error) => {
-        console.log(error);
         reject(error);
       },
     );

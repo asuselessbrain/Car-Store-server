@@ -1,8 +1,26 @@
+import sendOrderConfirmationMail from '../../utils/nodemainle';
 import { CarModel } from '../carModels/car.model';
 import { IUser } from '../userModels/user.interface';
 import { IOrder } from './order.interface';
 import { OrderModel } from './order.medel';
 import { orderUtils } from './order.utils';
+
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  userStatus: string;
+  __v: number;
+}
+
+interface Car {
+  _id: string;
+  brand: string;
+  model: string;
+  category: string;
+  price: number;
+}
 
 const updateCarInventoryInDB = async (carId: string, orderQuantity: number) => {
   const car = await CarModel.findById(carId);
@@ -61,7 +79,6 @@ const createOrderInDB = async (
       },
     });
   }
-
   return payment.checkout_url;
 };
 
@@ -162,11 +179,11 @@ const getOrderByIdFromDB = async (userId: string) => {
   return result;
 };
 
-const verifyPayment = async (order_id: string) => {
+const verifyPayment = async (userEmail: string, order_id: string) => {
   const verifiedPayment = await orderUtils.verifyPaymentAsync(order_id);
 
   if (verifiedPayment.length) {
-    await OrderModel.findOneAndUpdate(
+    const res = await OrderModel.findOneAndUpdate(
       {
         'transaction.id': order_id,
       },
@@ -186,6 +203,28 @@ const verifyPayment = async (order_id: string) => {
                 ? 'cancelled'
                 : '',
       },
+      {
+        new: true,
+      },
+    )
+      .populate<{ car: Car }>('car')
+      .populate<{ userId: User }>('userId');
+    const mailBody = `
+                    <h1>Order Confirmation</h1>
+                    <p><strong>Customer Name:</strong> ${res?.userId?.name}</p>
+                    <p><strong>Order ID:</strong> ${res?._id}</p>
+                    <p><strong>Product:</strong> ${res?.car?.brand} - ${res?.car?.model}</p>
+                    <p><strong>Category:</strong> ${res?.car?.category}</p>
+                    <p><strong>Price:</strong> ${res?.car?.price} BDT</p>
+                    <p><strong>Quantity:</strong> ${res?.quantity}</p>
+                    <p><strong>Total:</strong> ${res?.totalPrice} BDT</p>
+                    <p><strong>Status:</strong> ${res?.status}</p>`;
+
+    sendOrderConfirmationMail(
+      'ahmedshohagarfan@gmail.com',
+      userEmail,
+      'Order Confirmation',
+      mailBody,
     );
   }
   return verifiedPayment;

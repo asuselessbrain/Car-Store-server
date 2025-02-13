@@ -37,8 +37,6 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
     req.ip!,
   );
 
-  console.log(createOrder);
-
   responser(res, {
     statusCode: StatusCodes.OK,
     message: 'Order created successfully',
@@ -47,7 +45,11 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
 });
 
 const verifyPayment = catchAsync(async (req, res) => {
-  const order = await orderServices.verifyPayment(req.query.order_id as string);
+  const userEmail = req?.user?.email;
+  const order = await orderServices.verifyPayment(
+    userEmail,
+    req.query.order_id as string,
+  );
 
   responser(res, {
     statusCode: StatusCodes.CREATED,
