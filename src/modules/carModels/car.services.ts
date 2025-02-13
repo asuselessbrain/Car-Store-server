@@ -16,9 +16,10 @@ const getAllCarsFromDB = async (payload: Record<string, unknown>) => {
     .sort()
     .pagination();
 
+  const meta = await carQuery.countTotal();
   const result = await carQuery.modelQuery;
 
-  return result;
+  return { meta, result };
 };
 
 const getSingleCarFromDB = async (carId: string) => {
