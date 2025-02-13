@@ -7,23 +7,7 @@ const createCarInDB = async (car: Cars) => {
 };
 
 const getAllCarsFromDB = async (payload: Record<string, unknown>) => {
-  const queryObj = { ...payload };
-
-  const exclude = ['searchTerm', 'page', 'limit', 'sortBy', 'sortOrder'];
-
-  exclude.forEach((key) => delete queryObj[key]);
-
   const searchFields = ['category', 'brand', 'model'];
-
-  const searchTerm = payload?.searchTerm || '';
-
-  const searchResult = CarModel.find({
-    $or: searchFields.map((searchField) => ({
-      [searchField]: { $regex: searchTerm, $options: 'i' },
-    })),
-  });
-
-  const filteringResult = searchResult.find(queryObj);
 
   const page = Number(payload?.page) || 1;
   const limit = Number(payload?.limit) || 10;
