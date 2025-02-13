@@ -1,3 +1,4 @@
+import QueryBuilder from '../../builder/QueryBuilder';
 import { Cars } from './car.interface';
 import { CarModel } from './car.model';
 
@@ -7,27 +8,17 @@ const createCarInDB = async (car: Cars) => {
 };
 
 const getAllCarsFromDB = async (payload: Record<string, unknown>) => {
-  const searchFields = ['category', 'brand', 'model'];
+  const searchFields = ['brand', 'model'];
 
-  const page = Number(payload?.page) || 1;
-  const limit = Number(payload?.limit) || 10;
+  const carQuery = new QueryBuilder(CarModel.find(), payload)
+    .search(searchFields)
+    .filter()
+    .sort()
+    .pagination();
 
-  const skip = (page - 1) * limit;
+  const result = await carQuery.modelQuery;
 
-  const paginationQuery = filteringResult.skip(skip).limit(limit);
-
-  let sortStr;
-
-  if (payload?.sortBy && payload?.sortOrder) {
-    const sortBy = payload?.sortBy;
-    const sortOrder = payload?.sortOrder;
-
-    sortStr = `${sortOrder === 'desc' ? '-' : ''}${sortBy}`;
-  }
-
-  const sortedValue = await paginationQuery.sort(sortStr);
-
-  return sortedValue;
+  return result;
 };
 
 const getSingleCarFromDB = async (carId: string) => {
