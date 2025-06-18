@@ -6,7 +6,9 @@ import { AuthService } from './auth.service';
 import { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 
+
 const register = catchAsync(async (req: Request, res: Response) => {
+  
   const result = await AuthService.register(req.body);
 
   responser(res, {

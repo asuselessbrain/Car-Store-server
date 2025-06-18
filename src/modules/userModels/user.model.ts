@@ -38,6 +38,19 @@ const userSchema = new Schema<IUser>({
     required: true,
     default: 'active',
   },
+  otp: {
+    type: String,
+    required: true
+  },
+  verified: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  otpExpire: {
+    type: Date,
+    required: true
+  }
 });
 
 userSchema.pre('save', async function (next) {

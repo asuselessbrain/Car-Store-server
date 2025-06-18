@@ -18,6 +18,7 @@ app.use(
       'http://localhost:5174',
       'http://localhost:5173',
       'https://car-store-frontend-delta.vercel.app',
+      'exp://192.168.0.18:8081'
     ],
     credentials: true,
   }),

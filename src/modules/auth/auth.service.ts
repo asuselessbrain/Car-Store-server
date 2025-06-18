@@ -3,9 +3,32 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { IUser } from '../userModels/user.interface';
 import User from '../userModels/user.model';
 import config from '../../config';
+import crypto from 'crypto';
+import sendOrderConfirmationMail from '../../utils/nodemainle';
+
+const generateOTP = () => crypto.randomInt(100000, 999999).toString();
+
 
 const register = async (payload: IUser) => {
-  const result = await User.create(payload);
+
+  const otp = generateOTP();
+  const otpExpire = new Date(Date.now() + 5 * 60 * 1000);
+
+
+  const { name, email, password } = payload;
+
+  const userInfo = { name, email, password, otp, otpExpire }
+
+  const emailOTP = `<h2>Your OTP from Car Store</h2>
+    <p>Hello ${name},</p>
+    <p>Your OTP is: <strong>${otp}</strong></p>
+    <p>This OTP will expire in 5 minutes.</p>
+    <br/>
+    <p>Thank you for registering with Car Store!</p>`
+
+  await sendOrderConfirmationMail('ahmedshohagarfan@gmail.com', email, "Your OTP Code for Car Store Account Verification", emailOTP)
+
+  const result = await User.create(userInfo);
   return result;
 };
 

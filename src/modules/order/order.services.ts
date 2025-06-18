@@ -1,3 +1,4 @@
+import config from '../../config';
 import sendOrderConfirmationMail from '../../utils/nodemainle';
 import { CarModel } from '../carModels/car.model';
 import { IUser } from '../userModels/user.interface';
@@ -42,22 +43,32 @@ const updateCarInventoryInDB = async (carId: string, orderQuantity: number) => {
 
 const createOrderInDB = async (
   user: IUser,
-  order: IOrder,
+  order: IOrder & { platform?: 'web' | 'mobile' }, // platform optional but accepted
   client_ip: string,
 ) => {
   if (!order.car) {
     throw new Error('Car is required');
   }
+
   const car = await CarModel.findById(order.car);
+  if (!car) {
+    throw new Error('Car not found');
+  }
 
   const OrderData = {
     userId: user._id,
-    totalPrice: order.quantity * Number(car?.price),
+    totalPrice: order.quantity * Number(car.price),
     car: order.car,
     quantity: order.quantity,
   };
 
   let result = await OrderModel.create(OrderData);
+
+  // Determine return_url based on platform
+  const return_url =
+    order.platform === 'mobile'
+      ? config.sp.sp_return_url_mobile
+      : config.sp.sp_return_url_web;
 
   const spPayload = {
     amount: OrderData.totalPrice,
@@ -69,16 +80,20 @@ const createOrderInDB = async (
     customer_phone: '017XXXXXXXX',
     customer_city: 'Patukhali',
     client_ip,
+    return_url, // Added return_url to payload
   };
-  const payment = await orderUtils.paymentResult(spPayload);
+
+  const payment = await orderUtils.paymentResult(spPayload, order.platform as 'web' | 'mobile');
+
   if (payment?.transactionStatus) {
-    result = await result.updateOne({
+    await result.updateOne({
       transaction: {
         id: payment.sp_order_id,
         transactionStatus: payment.transactionStatus,
       },
     });
   }
+
   return payment.checkout_url;
 };
 

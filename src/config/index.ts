@@ -15,6 +15,7 @@ export default {
     sp_username: process.env.SP_USERNAME,
     sp_password: process.env.SP_PASSWORD,
     sp_prefix: process.env.SP_PREFIX,
-    sp_return_url: process.env.SP_RETURN_URL,
+    sp_return_url_web: process.env.SP_RETURN_URL_WEB,
+    sp_return_url_mobile: process.env.SP_RETURN_URL_MOBILE,
   },
 };
