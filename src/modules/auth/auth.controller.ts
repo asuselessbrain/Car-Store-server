@@ -27,6 +27,16 @@ const verifyOTP = catchAsync(async(req: Request, res: Response) => {
     data: result
   })
 })
+
+const resendOTP = catchAsync(async(req: Request, res: Response)=>{
+  const result = await AuthService.resendOTP(req.body);
+  responser(res,{
+    statusCode: StatusCodes.OK,
+    message: "OTP has been resent successfully.",
+    data: result
+  })
+})
+
 const login = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.login(req.body);
 
@@ -76,5 +86,6 @@ export const AuthControllers = {
   login,
   changePassword,
   generateTokenUsingRefreshToken,
-  verifyOTP
+  verifyOTP,
+  resendOTP
 };

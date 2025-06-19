@@ -5,7 +5,7 @@ import User from '../userModels/user.model';
 import config from '../../config';
 import crypto from 'crypto';
 import sendOrderConfirmationMail from '../../utils/nodemainle';
-import { VerifyOTP } from '../../utils/types';
+import { ResendOTP, VerifyOTP } from '../../utils/types';
 
 const generateOTP = () => crypto.randomInt(100000, 999999).toString();
 
@@ -56,6 +56,34 @@ const verifyOTP = async (payload: VerifyOTP) => {
   return result
 }
 
+// resend otp
+const resendOTP = async (payload: ResendOTP) => {
+  const { email } = payload;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new Error("User not Found!")
+  }
+  if (user?.verified) {
+    throw new Error("User already verified!")
+  }
+  const otp = generateOTP();
+  const otpExpire = new Date(Date.now() + 5 * 60 * 1000);
+
+  const emailOTP = `<h2>Your OTP from Car Store</h2>
+    <p>Your OTP is: <strong>${otp}</strong></p>
+    <p>This OTP will expire in 5 minutes.</p>
+    <br/>
+    <p>Thank you for registering with Car Store!</p>`
+
+  await sendOrderConfirmationMail('ahmedshohagarfan@gmail.com', email, "Your OTP Code for Car Store Account Verification", emailOTP)
+
+  const result = await User.findOneAndUpdate({ email }, {$set: { otp, otpExpire }}, { new: true })
+
+  return result;
+}
+
 const login = async (payload: { email: string; password: string }) => {
   // checking if the user is exist
   const user = await User.findOne({ email: payload?.email }).select(
@@ -73,7 +101,7 @@ const login = async (payload: { email: string; password: string }) => {
     throw new Error('This user is blocked ! !');
   }
 
-  if(!user?.verified){
+  if (!user?.verified) {
     throw new Error("User is not verified!")
   }
 
@@ -201,5 +229,6 @@ export const AuthService = {
   login,
   changePassword,
   generateTokenUsingRefreshToken,
-  verifyOTP
+  verifyOTP,
+  resendOTP
 };

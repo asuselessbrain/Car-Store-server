@@ -14,18 +14,23 @@ authRouter.post(
   AuthControllers.register,
 );
 
-authRouter.post('/verify-otp',AuthControllers.verifyOTP)
+authRouter.post('/verify-otp',AuthControllers.verifyOTP),
+
+authRouter.post('/resend-otp', AuthControllers.resendOTP),
+
 authRouter.post(
   '/login',
   validateRequest(AuthValidation.loginValidationSchema),
   AuthControllers.login,
 );
+
 authRouter.post(
   '/change-password',
   auth(USER_ROLE.admin, USER_ROLE.user),
   validateRequest(AuthValidation.passwordChangeValidationSchema),
   AuthControllers.changePassword,
 );
+
 authRouter.post(
   '/generate-new-token',
   validateRequest(AuthValidation.tokenValidation),
