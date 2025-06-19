@@ -73,6 +73,10 @@ const login = async (payload: { email: string; password: string }) => {
     throw new Error('This user is blocked ! !');
   }
 
+  if(!user?.verified){
+    throw new Error("User is not verified!")
+  }
+
   //checking if the password is correct
   const isPasswordMatched = await bcrypt.compare(
     payload?.password,
