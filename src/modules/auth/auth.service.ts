@@ -5,6 +5,7 @@ import User from '../userModels/user.model';
 import config from '../../config';
 import crypto from 'crypto';
 import sendOrderConfirmationMail from '../../utils/nodemainle';
+import { VerifyOTP } from '../../utils/types';
 
 const generateOTP = () => crypto.randomInt(100000, 999999).toString();
 
@@ -31,6 +32,29 @@ const register = async (payload: IUser) => {
   const result = await User.create(userInfo);
   return result;
 };
+
+// verify OTP
+const verifyOTP = async (payload: VerifyOTP) => {
+  const { email, otp } = payload;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new Error("User not Found!")
+  }
+  if (user.verified) {
+    throw new Error("User already verified!")
+  }
+  if (user.otp != otp) {
+    throw new Error("Invalid OTP!")
+  }
+  if (user.otpExpire < new Date()) {
+    throw new Error("Expired OTP!")
+  }
+
+  const result = await User.findOneAndUpdate({ email }, { $set: { verified: true }, $unset: { otp: "", otpExpire: "" } }, { new: true })
+  return result
+}
 
 const login = async (payload: { email: string; password: string }) => {
   // checking if the user is exist
@@ -173,4 +197,5 @@ export const AuthService = {
   login,
   changePassword,
   generateTokenUsingRefreshToken,
+  verifyOTP
 };

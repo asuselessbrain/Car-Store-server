@@ -13,6 +13,8 @@ authRouter.post(
   validateRequest(UserValidation.userValidationSchema),
   AuthControllers.register,
 );
+
+authRouter.post('/verify-otp',AuthControllers.verifyOTP)
 authRouter.post(
   '/login',
   validateRequest(AuthValidation.loginValidationSchema),

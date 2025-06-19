@@ -17,6 +17,16 @@ const register = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const verifyOTP = catchAsync(async(req: Request, res: Response) => {
+  const result = await AuthService.verifyOTP(req.body);
+
+  responser(res,{
+    statusCode: StatusCodes.OK,
+    message: 'User verified Successfully!',
+    data: result
+  })
+})
 const login = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.login(req.body);
 
@@ -66,4 +76,5 @@ export const AuthControllers = {
   login,
   changePassword,
   generateTokenUsingRefreshToken,
+  verifyOTP
 };
