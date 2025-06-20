@@ -50,7 +50,12 @@ const userSchema = new Schema<IUser>({
   otpExpire: {
     type: Date,
     required: true
-  }
+  },
+  loginVerification: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
 });
 
 userSchema.pre('save', async function (next) {

@@ -21,6 +21,14 @@ const register = catchAsync(async (req: Request, res: Response) => {
 const verifyOTP = catchAsync(async(req: Request, res: Response) => {
   const result = await AuthService.verifyOTP(req.body);
 
+  if(req?.body?.context === "login" && "refreshToken" in result!){
+
+  res.cookie('refreshToken', result?.refreshToken, {
+    secure: config.node_env === 'production',
+    httpOnly: true,
+  });
+  }
+
   responser(res,{
     statusCode: StatusCodes.OK,
     message: 'User verified Successfully!',
@@ -40,18 +48,11 @@ const resendOTP = catchAsync(async(req: Request, res: Response)=>{
 const login = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.login(req.body);
 
-  // const { refreshToken } = result;
-
-  // res.cookie('refreshToken', refreshToken, {
-  //   secure: config.node_env === 'production',
-  //   httpOnly: true,
-  // });
-
   responser(res, {
     statusCode: StatusCodes.ACCEPTED,
     message: 'OTP sent to your email',
     data: {
-      email: result?.email,
+      email: result,
     },
   });
 });

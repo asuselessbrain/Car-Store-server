@@ -35,23 +35,52 @@ const register = async (payload: IUser) => {
 
 // verify OTP
 const verifyOTP = async (payload: VerifyOTP) => {
-  const { email, otp } = payload;
+  const { email, otp, context } = payload;
 
   const user = await User.findOne({ email });
 
   if (!user) {
     throw new Error("User not Found!")
   }
-  if (user.verified) {
-    throw new Error("User already verified!")
-  }
-  if (!user.otp || !user.otpExpire) throw new Error('No OTP generated');
+
+  if (!user.otp || !user.otpExpire) throw new Error('OTP was not generated. Please login again.');
   if (user.otp != otp || user.otpExpire < new Date()) {
     throw new Error("Invalid OTP or Expired OTP!")
   }
 
-  const result = await User.findOneAndUpdate({ email }, { $set: { verified: true }, $unset: { otp: "", otpExpire: "" } }, { new: true })
-  return result
+  if (context === 'signup') {
+    if (user.verified) {
+      throw new Error("User already verified!")
+    }
+    const result = await User.findOneAndUpdate({ email }, { $set: { verified: true }, $unset: { otp: "", otpExpire: "" } }, { new: true })
+    return result
+  }
+  if (context === 'login') {
+
+
+    if (user?.loginVerification) {
+      throw new Error("User already verified!")
+    }
+    const updatedUser = await User.findOneAndUpdate({ email }, { $unset: { otp: "", otpExpire: "", loginVerification: "" } }, { new: true })
+    //create token and sent to the  client
+    const jwtPayload = {
+      email: user?.email,
+      role: user?.role,
+    };
+
+    const token = jwt.sign(jwtPayload, config.jwt_secret as string, {
+      expiresIn: '1d',
+    });
+
+    const refreshToken = jwt.sign(
+      jwtPayload,
+      config.jwt_refresh_secret as string,
+      {
+        expiresIn: '7d',
+      },
+    );
+    return { token, user: updatedUser, refreshToken };
+  }
 }
 
 // resend otp
@@ -129,9 +158,30 @@ const login = async (payload: { email: string; password: string }) => {
 
   await sendOrderConfirmationMail('ahmedshohagarfan@gmail.com', payload?.email, "Your OTP Code for Car Store Account Login", emailOTP);
 
-  const setOtpInDB = await User?.findOneAndUpdate({email: payload?.email}, {$set: {otp, otpExpire, verified: false}}, {new: true})
+  const setOtpInDB = await User?.findOneAndUpdate({ email: payload?.email }, { $set: { otp, otpExpire, loginVerification: false } }, { new: true })
+  console.log(setOtpInDB)
 
-  return setOtpInDB;
+  return { email: setOtpInDB?.email };
+
+  // //create token and sent to the  client
+  // const jwtPayload = {
+  //   email: user?.email,
+  //   role: user?.role,
+  // };
+
+  // const token = jwt.sign(jwtPayload, config.jwt_secret as string, {
+  //   expiresIn: '1d',
+  // });
+
+  // const refreshToken = jwt.sign(
+  //   jwtPayload,
+  //   config.jwt_refresh_secret as string,
+  //   {
+  //     expiresIn: '7d',
+  //   },
+  // );
+
+  // return { token, user, refreshToken };
 };
 
 const changePassword = async (

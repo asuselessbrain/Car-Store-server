@@ -11,7 +11,8 @@ export interface IUser {
   userStatus: 'active' | 'inactive';
   otp: string;
   verified: boolean;
-  otpExpire: Date
+  otpExpire: Date;
+  loginVerification: boolean
 }
 
 export type TUserRole = keyof typeof USER_ROLE;
