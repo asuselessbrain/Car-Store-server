@@ -45,11 +45,9 @@ const verifyOTP = async (payload: VerifyOTP) => {
   if (user.verified) {
     throw new Error("User already verified!")
   }
-  if (user.otp != otp) {
-    throw new Error("Invalid OTP!")
-  }
-  if (user.otpExpire < new Date()) {
-    throw new Error("Expired OTP!")
+  if (!user.otp || !user.otpExpire) throw new Error('No OTP generated');
+  if (user.otp != otp || user.otpExpire < new Date()) {
+    throw new Error("Invalid OTP or Expired OTP!")
   }
 
   const result = await User.findOneAndUpdate({ email }, { $set: { verified: true }, $unset: { otp: "", otpExpire: "" } }, { new: true })
@@ -79,7 +77,7 @@ const resendOTP = async (payload: ResendOTP) => {
 
   await sendOrderConfirmationMail('ahmedshohagarfan@gmail.com', email, "Your OTP Code for Car Store Account Verification", emailOTP)
 
-  const result = await User.findOneAndUpdate({ email }, {$set: { otp, otpExpire }}, { new: true })
+  const result = await User.findOneAndUpdate({ email }, { $set: { otp, otpExpire } }, { new: true })
 
   return result;
 }
@@ -91,14 +89,14 @@ const login = async (payload: { email: string; password: string }) => {
   );
 
   if (!user) {
-    throw new Error('This user is not found !');
+    throw new Error('user not found !');
   }
 
   // checking if the user is inactive
   const userStatus = user?.userStatus;
 
   if (userStatus === 'inactive') {
-    throw new Error('This user is blocked ! !');
+    throw new Error('User is blocked ! !');
   }
 
   if (!user?.verified) {
@@ -115,25 +113,25 @@ const login = async (payload: { email: string; password: string }) => {
     throw new Error('Wrong Password!!! 😈');
   }
 
-  //create token and sent to the  client
-  const jwtPayload = {
-    email: user?.email,
-    role: user?.role,
-  };
+  const otp = generateOTP();
+  const otpExpire = new Date(Date.now() + 5 * 60 * 1000);
 
-  const token = jwt.sign(jwtPayload, config.jwt_secret as string, {
-    expiresIn: '1d',
-  });
+  const emailOTP = `
+  <h2>Your Login OTP for Car Store</h2>
+  <p>Hello,</p>
+  <p>We received a request to log in to your Car Store account.</p>
+  <p>Your OTP is: <strong>${otp}</strong></p>
+  <p>This OTP is valid for 5 minutes.</p>
+  <br/>
+  <p>If you did not request this, please ignore this email.</p>
+  <p>Thank you,<br/>The Car Store Team</p>
+  `
 
-  const refreshToken = jwt.sign(
-    jwtPayload,
-    config.jwt_refresh_secret as string,
-    {
-      expiresIn: '7d',
-    },
-  );
+  await sendOrderConfirmationMail('ahmedshohagarfan@gmail.com', payload?.email, "Your OTP Code for Car Store Account Login", emailOTP);
 
-  return { token, user, refreshToken };
+  const setOtpInDB = await User?.findOneAndUpdate({email: payload?.email}, {$set: {otp, otpExpire, verified: false}}, {new: true})
+
+  return setOtpInDB;
 };
 
 const changePassword = async (

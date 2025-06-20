@@ -40,18 +40,19 @@ const resendOTP = catchAsync(async(req: Request, res: Response)=>{
 const login = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.login(req.body);
 
-  const { refreshToken } = result;
+  // const { refreshToken } = result;
 
-  res.cookie('refreshToken', refreshToken, {
-    secure: config.node_env === 'production',
-    httpOnly: true,
-  });
+  // res.cookie('refreshToken', refreshToken, {
+  //   secure: config.node_env === 'production',
+  //   httpOnly: true,
+  // });
 
   responser(res, {
     statusCode: StatusCodes.ACCEPTED,
-    message: 'User logged in successfully',
-    token: result?.token,
-    data: result?.user,
+    message: 'OTP sent to your email',
+    data: {
+      email: result?.email,
+    },
   });
 });
 
