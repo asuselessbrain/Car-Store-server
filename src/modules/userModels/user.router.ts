@@ -6,11 +6,9 @@ import { USER_ROLE } from './user.constants';
 import { upload } from '../../utils/imageUploderInCloudinary';
 import validateRequest from '../../middlewares/validateRequest';
 import { UserValidation } from './userValidation';
-// import { userValidationSchema } from './userValidation';
 
 const userRouter = Router();
 
-// todo: need to update
 userRouter.post(
   '/create-admin',
   upload.single('profileImg'),
