@@ -13,9 +13,9 @@ export interface IUser {
   profileImg: string | null;
   role: 'user' | 'admin';
   userStatus: 'active' | 'blocked';
-  otp: string;
+  otp?: string;
   verified: boolean;
-  otpExpire: Date;
+  otpExpire?: Date;
   loginVerification: boolean
 }
 

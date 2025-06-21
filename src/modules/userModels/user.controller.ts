@@ -7,9 +7,10 @@ import { catchAsync } from '../../utils/catchAsync';
 import { responser } from '../../utils/responser';
 
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
+
   const payload = req.body;
 
-  const result = await userService.createAdmin(payload);
+  const result = await userService.createAdmin(req?.file,payload);
 
   responser(res, {
     statusCode: StatusCodes.CREATED,

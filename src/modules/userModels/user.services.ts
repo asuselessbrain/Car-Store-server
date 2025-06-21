@@ -1,11 +1,18 @@
 import config from '../../config';
+import { sendImageToCloudinary } from '../../utils/imageUploderInCloudinary';
 import { IUser } from './user.interface';
 import User from './user.model';
 import bcrypt from 'bcrypt';
 
-const createAdmin = async (payload: IUser): Promise<IUser> => {
+const createAdmin = async (file: any, payload: IUser) => {
   payload.role = 'admin';
-  const result = await User.create(payload);
+  payload.verified = true;
+
+  const { secure_url } = await sendImageToCloudinary(file?.path, payload?.firstName + payload?.lastName)
+
+  const adminInfo = {...payload, profileImg: secure_url}
+
+  const result = await User.create(adminInfo);
 
   return result;
 };

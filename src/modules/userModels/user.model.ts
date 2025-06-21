@@ -76,7 +76,6 @@ const userSchema = new Schema<IUser>({
   },
   otp: {
     type: String,
-    required: true
   },
   verified: {
     type: Boolean,
@@ -85,7 +84,6 @@ const userSchema = new Schema<IUser>({
   },
   otpExpire: {
     type: Date,
-    required: true
   },
   loginVerification: {
     type: Boolean,
