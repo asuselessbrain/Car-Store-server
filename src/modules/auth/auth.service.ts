@@ -13,19 +13,19 @@ const generateOTP = () => crypto.randomInt(100000, 999999).toString();
 
 const register = async (file:any, payload: IUser) => {
 
-  const {secure_url} = await sendImageToCloudinary(file?.path, payload?.name)
+  const {secure_url} = await sendImageToCloudinary(file?.path, payload?.firstName+payload?.lastName)
   const profileImg = secure_url;
 
   const otp = generateOTP();
   const otpExpire = new Date(Date.now() + 5 * 60 * 1000);
 
 
-  const { name, email, password } = payload;
+  const { firstName, lastName, email, phoneNumber, gender,dob, address, password } = payload;
 
-  const userInfo = { name, email, password, otp, otpExpire, profileImg }
+  const userInfo = { firstName, lastName, email, phoneNumber, gender,dob, address, password, otp, otpExpire, profileImg }
 
   const emailOTP = `<h2>Your OTP from Car Store</h2>
-    <p>Hello ${name},</p>
+    <p>Hello ${firstName+lastName},</p>
     <p>Your OTP is: <strong>${otp}</strong></p>
     <p>This OTP will expire in 5 minutes.</p>
     <br/>

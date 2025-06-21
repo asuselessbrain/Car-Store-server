@@ -22,7 +22,6 @@ export const userValidationSchema = z.object({
 
     gender: z.enum(['male', 'female', 'others'], {
       required_error: 'Gender is required',
-      invalid_type_error: 'Gender must be male, female, or others',
     }),
 
     dob: z.coerce.date({ required_error: 'Date of birth is required' }),
@@ -36,31 +35,22 @@ export const userValidationSchema = z.object({
       .min(6, 'Password must be at least 6 characters')
       .max(20, 'Password must be at most 20 characters'),
 
-    role: z.enum(['user', 'admin'], {
-      required_error: 'Role is required',
-      invalid_type_error: 'Role must be either user or admin',
-    }),
+    role: z
+      .enum(['user', 'admin'])
+      .default('user'),
 
-    userStatus: z.enum(['active', 'inactive'], {
-      required_error: 'User status is required',
-      invalid_type_error: 'User status must be active or inactive',
-    }),
+    userStatus: z
+      .enum(['active', 'inactive'])
+      .default('active'),
 
-    otp: z
-      .string({ required_error: 'OTP is required' })
-      .min(4, 'OTP must be at least 4 characters'),
+    verified: z
+      .boolean()
+      .default(false),
 
-    verified: z.boolean({
-      required_error: 'Verified field must be a boolean',
-    }),
 
-    otpExpire: z.coerce.date({
-      required_error: 'OTP expiration time is required',
-    }),
-
-    loginVerification: z.boolean({
-      required_error: 'Login verification field must be a boolean',
-    }),
+    loginVerification: z
+      .boolean()
+      .default(false),
   }),
 });
 
