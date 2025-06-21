@@ -17,48 +17,48 @@ const userSchema = new Schema<IUser>({
     maxlength: 20,
   },
   email: {
-  type: String,
-  required: [true, "Please provide your email address"],
-  unique: true, // ensures email uniqueness
-  lowercase: true, // store email in lowercase
-  trim: true, // remove spaces
-  match: [
-    /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-    "Please provide a valid email address"
-  ]
-},
-phoneNumber: {
-  type: String,
-  required: [true, "Please provide your phone number"],
-  trim: true,
-  match: [
-    /^01[3-9]\d{8}$/,
-    "Please provide a valid Bangladeshi phone number starting with 01"
-  ]
-},
-gender: {
-  type: String,
-  enum: {
-    values: ['male', 'female', 'others'],
-    message: '{VALUE} is not valid, please provide a valid role',
+    type: String,
+    required: [true, "Please provide your email address"],
+    unique: true, // ensures email uniqueness
+    lowercase: true, // store email in lowercase
+    trim: true, // remove spaces
+    match: [
+      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+      "Please provide a valid email address"
+    ]
   },
-  required: [true, "Please provide your gender"]
-},
-dob: {
-  type: Date,
-  required: [true, "Please provide your date of birth"]
-},
-address: {
-  type: String,
-  required: [true, "Please provide your address"]
-},
+  phoneNumber: {
+    type: String,
+    required: [true, "Please provide your phone number"],
+    trim: true,
+    match: [
+      /^01[3-9]\d{8}$/,
+      "Please provide a valid Bangladeshi phone number starting with 01"
+    ]
+  },
+  gender: {
+    type: String,
+    enum: {
+      values: ['male', 'female', 'others'],
+      message: '{VALUE} is not valid, please provide a valid role',
+    },
+    required: [true, "Please provide your gender"]
+  },
+  dob: {
+    type: Date,
+    required: [true, "Please provide your date of birth"]
+  },
+  address: {
+    type: String,
+    required: [true, "Please provide your address"]
+  },
 
   password: {
     type: String,
     required: true,
     select: false,
   },
-  profileImg: {type: String, required: [true, "Please provide your profile picture"]},
+  profileImg: { type: String, required: [true, "Please provide your profile picture"] },
   role: {
     type: String,
     enum: {
@@ -70,7 +70,7 @@ address: {
   },
   userStatus: {
     type: String,
-    enum: ['active', 'inactive'],
+    enum: ['active', 'blocked'],
     required: true,
     default: 'active',
   },

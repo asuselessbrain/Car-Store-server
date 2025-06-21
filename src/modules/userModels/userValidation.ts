@@ -40,7 +40,7 @@ export const userValidationSchema = z.object({
       .default('user'),
 
     userStatus: z
-      .enum(['active', 'inactive'])
+      .enum(['active', 'blocked'])
       .default('active'),
 
     verified: z

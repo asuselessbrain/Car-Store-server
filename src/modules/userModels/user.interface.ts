@@ -12,7 +12,7 @@ export interface IUser {
   address: string;
   profileImg: string | null;
   role: 'user' | 'admin';
-  userStatus: 'active' | 'inactive';
+  userStatus: 'active' | 'blocked';
   otp: string;
   verified: boolean;
   otpExpire: Date;

@@ -74,7 +74,7 @@ const createOrderInDB = async (
     amount: OrderData.totalPrice,
     order_id: result._id,
     currency: 'BDT',
-    customer_name: user?.name,
+    customer_name: user?.firstName + user?.lastName,
     customer_address: 'Dumki, Patuakhali',
     customer_email: user?.email,
     customer_phone: '017XXXXXXXX',

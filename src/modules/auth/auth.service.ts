@@ -125,10 +125,10 @@ const login = async (payload: { email: string; password: string }) => {
     throw new Error('user not found !');
   }
 
-  // checking if the user is inactive
+  // checking if the user is blocked
   const userStatus = user?.userStatus;
 
-  if (userStatus === 'inactive') {
+  if (userStatus === 'blocked') {
     throw new Error('User is blocked ! !');
   }
 
@@ -183,10 +183,10 @@ const changePassword = async (
     throw new Error('This user is not found !');
   }
 
-  // checking if the user is inactive
+  // checking if the user is blocked
   const userStatus = user?.userStatus;
 
-  if (userStatus === 'inactive') {
+  if (userStatus === 'blocked') {
     throw new Error('This user is blocked ! !');
   }
 
@@ -236,10 +236,10 @@ const generateTokenUsingRefreshToken = async (token: string) => {
     throw new Error('This user is not found !');
   }
 
-  // checking if the user is inactive
+  // checking if the user is blocked
   const userStatus = user?.userStatus;
 
-  if (userStatus === 'inactive') {
+  if (userStatus === 'blocked') {
     throw new Error('This user is blocked ! !');
   }
 

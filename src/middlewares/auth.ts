@@ -39,10 +39,10 @@ const auth = (...requiredRoles: TUserRole[]) => {
       throw new AppError(StatusCodes.NOT_FOUND, 'This user is not found');
     }
 
-    // checking if the user is inactive
+    // checking if the user is blocked
     const userStatus = user?.userStatus;
 
-    if (userStatus === 'inactive') {
+    if (userStatus === 'blocked') {
       throw new AppError(StatusCodes.FORBIDDEN, 'This user is blocked ! !');
     }
 
