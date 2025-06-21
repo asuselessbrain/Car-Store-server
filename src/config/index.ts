@@ -10,6 +10,11 @@ export default {
   bcrypt_salt_rounds: process.env.BCYPT_SALT_ROUNDS,
   jwt_secret: process.env.JWT_SECRET,
   jwt_refresh_secret: process.env.JWT_REFRESH_SECRET,
+  cloud: {
+    cloud_name: process.env.cloud_name,
+    api_key: process.env.api_key,
+    api_secret: process.env.api_secret,
+  },
   sp: {
     sp_endpoint: process.env.SP_ENDPOINT,
     sp_username: process.env.SP_USERNAME,

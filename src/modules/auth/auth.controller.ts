@@ -8,8 +8,8 @@ import config from '../../config';
 
 
 const register = catchAsync(async (req: Request, res: Response) => {
-  
-  const result = await AuthService.register(req.body);
+
+  const result = await AuthService.register(req.file,req.body);
 
   responser(res, {
     statusCode: StatusCodes.CREATED,
@@ -18,27 +18,33 @@ const register = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const verifyOTP = catchAsync(async(req: Request, res: Response) => {
+const verifyOTP = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.verifyOTP(req.body);
 
-  if(req?.body?.context === "login" && "refreshToken" in result!){
+  if (req?.body?.context === "login" && result &&  "refreshToken" in result) {
 
-  res.cookie('refreshToken', result?.refreshToken, {
-    secure: config.node_env === 'production',
-    httpOnly: true,
-  });
+    res.cookie('refreshToken', result?.refreshToken, {
+      secure: config.node_env === 'production',
+      httpOnly: true,
+      sameSite: 'none',
+    });
   }
 
-  responser(res,{
+  const message =
+    req?.body?.context === 'signup'
+      ? 'User registered and verified successfully!'
+      : 'User logged in successfully!';
+
+  responser(res, {
     statusCode: StatusCodes.OK,
-    message: 'User verified Successfully!',
+    message,
     data: result
   })
 })
 
-const resendOTP = catchAsync(async(req: Request, res: Response)=>{
+const resendOTP = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.resendOTP(req.body);
-  responser(res,{
+  responser(res, {
     statusCode: StatusCodes.OK,
     message: "OTP has been resent successfully.",
     data: result

@@ -6,7 +6,7 @@ export interface IUser {
   email: string;
   password: string;
   age?: number;
-  photo?: string | null;
+  profileImg: string | null;
   role: 'user' | 'admin';
   userStatus: 'active' | 'inactive';
   otp: string;

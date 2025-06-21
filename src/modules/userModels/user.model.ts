@@ -22,7 +22,7 @@ const userSchema = new Schema<IUser>({
     required: true,
     select: false,
   },
-  photo: String,
+  profileImg: {type: String, required: true},
   role: {
     type: String,
     enum: {

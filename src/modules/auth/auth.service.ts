@@ -6,11 +6,15 @@ import config from '../../config';
 import crypto from 'crypto';
 import sendOrderConfirmationMail from '../../utils/nodemainle';
 import { ResendOTP, VerifyOTP } from '../../utils/types';
+import { sendImageToCloudinary } from '../../utils/imageUploderInCloudinary';
 
 const generateOTP = () => crypto.randomInt(100000, 999999).toString();
 
 
-const register = async (payload: IUser) => {
+const register = async (file:any, payload: IUser) => {
+
+  const {secure_url} = await sendImageToCloudinary(file?.path, payload?.name)
+  const profileImg = secure_url;
 
   const otp = generateOTP();
   const otpExpire = new Date(Date.now() + 5 * 60 * 1000);
@@ -18,7 +22,7 @@ const register = async (payload: IUser) => {
 
   const { name, email, password } = payload;
 
-  const userInfo = { name, email, password, otp, otpExpire }
+  const userInfo = { name, email, password, otp, otpExpire, profileImg }
 
   const emailOTP = `<h2>Your OTP from Car Store</h2>
     <p>Hello ${name},</p>
@@ -162,26 +166,6 @@ const login = async (payload: { email: string; password: string }) => {
   console.log(setOtpInDB)
 
   return { email: setOtpInDB?.email };
-
-  // //create token and sent to the  client
-  // const jwtPayload = {
-  //   email: user?.email,
-  //   role: user?.role,
-  // };
-
-  // const token = jwt.sign(jwtPayload, config.jwt_secret as string, {
-  //   expiresIn: '1d',
-  // });
-
-  // const refreshToken = jwt.sign(
-  //   jwtPayload,
-  //   config.jwt_refresh_secret as string,
-  //   {
-  //     expiresIn: '7d',
-  //   },
-  // );
-
-  // return { token, user, refreshToken };
 };
 
 const changePassword = async (
