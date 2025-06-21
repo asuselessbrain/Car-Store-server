@@ -2,10 +2,14 @@ import { USER_ROLE } from './user.constants';
 
 export interface IUser {
   _id?: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  phoneNumber: string;
   password: string;
-  age?: number;
+  gender: 'male' | 'female' | 'others';
+  dob: Date;
+  address: string;
   profileImg: string | null;
   role: 'user' | 'admin';
   userStatus: 'active' | 'inactive';
