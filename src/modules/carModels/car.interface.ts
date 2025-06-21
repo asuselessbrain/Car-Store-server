@@ -2,7 +2,7 @@ export interface Cars {
   name: String,
   brand: String,
   model: String,
-  year: Number,
+  releaseYear: Number,
   bodyType: String,
   transmission: String,
   fuelType: String,
