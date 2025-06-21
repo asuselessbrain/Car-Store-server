@@ -13,8 +13,10 @@ const register = catchAsync(async (req: Request, res: Response) => {
 
   responser(res, {
     statusCode: StatusCodes.CREATED,
-    message: 'User registered successfully',
-    data: result,
+    message: 'OTP sent to your email',
+    data: {
+      email: result
+    },
   });
 });
 

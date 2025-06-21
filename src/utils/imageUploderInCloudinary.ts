@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary';
 import multer from 'multer';
 import config from '../config';
+import fs from 'fs';
 
 cloudinary.config({
     cloud_name: config.cloud.cloud_name,
@@ -14,6 +15,11 @@ export const sendImageToCloudinary = async (path: string, name: string) => {
             .upload(path, {
                 public_id: name,
             })
+        fs.unlink(path, (err) => {
+            if (err) {
+                console.error("Failed to delete image:", err);
+            }
+        });
         return result;
     } catch (error) {
         throw error

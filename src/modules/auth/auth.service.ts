@@ -34,7 +34,7 @@ const register = async (file:any, payload: IUser) => {
   await sendOrderConfirmationMail('ahmedshohagarfan@gmail.com', email, "Your OTP Code for Car Store Account Verification", emailOTP)
 
   const result = await User.create(userInfo);
-  return result;
+  return {email: result?.email};
 };
 
 // verify OTP
