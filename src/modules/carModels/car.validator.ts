@@ -15,9 +15,10 @@ export const carValidationSchema = z.object({
     .min(1, { message: 'Model is required' }),
 
   releaseYear: z
-    .number()
-    .min(1886, { message: 'Release year must be 1886 or later' })
-    .max(new Date().getFullYear(), { message: 'Release year cannot be in the future' }),
+    .date({
+    required_error: "Release year is required",
+    invalid_type_error: "Release year must be a valid date",
+  }),
 
   bodyType: z
     .string()

@@ -6,7 +6,7 @@ const carSchema = new Schema<Cars>(
     name: { type: String, required: [true, "Car name is required!"] },
     brand: { type: String, required: [true, "Car brand is required!"] },
     model: { type: String, required: [true, "Car model is required!"] },
-    releaseYear: { type: Number, required: [true, "Car release year is required!"] },
+    releaseYear: { type: Date, required: [true, "Car release year is required!"] },
     bodyType: { type: String, required: [true, "Car body type is required!"] },
     transmission: { type: String, required: [true, "Car transmission is required!"] },
     fuelType: { type: String, required: [true, "Car fuel type is required!"] },
