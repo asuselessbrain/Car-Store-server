@@ -7,7 +7,7 @@ import { catchAsync } from '../../utils/catchAsync';
 const createCars = catchAsync(async (req: Request, res: Response) => {
   const car = req.body;
 
-  const result = await createCarServices.createCarInDB(car);
+  const result = await createCarServices.createCarInDB(req?.files, car);
   responser(res, {
     statusCode: StatusCodes.CREATED,
     message: 'Car created successfully',

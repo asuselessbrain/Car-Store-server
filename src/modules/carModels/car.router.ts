@@ -3,6 +3,7 @@ import { carModels } from './car.controller';
 import { carValidationSchema } from './car.validator';
 import auth from '../../middlewares/auth';
 import { USER_ROLE } from '../userModels/user.constants';
+import { upload } from '../../utils/imageUploderInCloudinary';
 
 const router = express.Router();
 
@@ -19,7 +20,12 @@ const carValidator = async (
   }
 };
 
-router.post('/', carValidator, auth(USER_ROLE.admin), carModels.createCars);
+router.post('/', upload.array('images', 5),
+  (req, res, next: NextFunction) => {
+    req.body = JSON.parse(req?.body?.data);
+    next()
+  },
+  carValidator, auth(USER_ROLE.admin), carModels.createCars);
 router.get('/', carModels.getAllCars);
 router.get('/:carId', carModels.getSingleCar);
 router.put('/:carId', auth(USER_ROLE.admin), carModels.updateCar);
