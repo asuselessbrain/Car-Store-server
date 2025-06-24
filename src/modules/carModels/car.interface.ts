@@ -14,10 +14,11 @@ export interface Cars {
   inStock: Boolean,
 
   images: [String],
-  mileage: Number,
+  mileage: String,
   features: [String],
   description: String,
 
   category: String,
   tags: [String],
+  warranty?: string;
 }

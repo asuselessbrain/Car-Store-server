@@ -18,7 +18,7 @@ const carSchema = new Schema<Cars>(
     inStock: { type: Boolean, default: true },
 
     images: { type: [String], required: [true, "Please provide your profile picture"] },
-    mileage: { type: Number, required: [true, "Car mileage is required!"] },
+    mileage: { type: String, required: [true, "Car mileage is required!"] },
     features: {
       type: [String],
       default: [],
@@ -30,6 +30,7 @@ const carSchema = new Schema<Cars>(
       type: [String],
       default: [],
     },
+    warranty: { type: String}
   },
   {
     timestamps: true,

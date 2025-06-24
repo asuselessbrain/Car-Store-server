@@ -15,7 +15,7 @@ export const carValidationSchema = z.object({
     .min(1, { message: 'Model is required' }),
 
   releaseYear: z
-    .date({
+    .coerce.date({
     required_error: "Release year is required",
     invalid_type_error: "Release year must be a valid date",
   }),
@@ -51,8 +51,8 @@ export const carValidationSchema = z.object({
   inStock: z.boolean().default(true),
 
   mileage: z
-    .number()
-    .min(0, { message: 'Mileage must be a positive number' }),
+    .string()
+    .min(0, { message: 'Mileage must be a string' }),
 
   features: z
     .array(z.string())
@@ -68,5 +68,8 @@ export const carValidationSchema = z.object({
 
   tags: z
     .array(z.string())
+    .optional(),
+    warranty: z
+    .string()
     .optional(),
 });
