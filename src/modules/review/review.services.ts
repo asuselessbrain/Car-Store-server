@@ -7,13 +7,18 @@ const createReview = async (payload: IReview) => {
 };
 
 const getReview = async () => {
-  const result = await Review.find().populate('userId').sort({ _id: -1 });
+  const result = await Review.find().populate('userId').populate('carId').sort({ _id: -1 });
   return result;
 };
+
+const getSingleCarReview = async(id: string) => {
+  const result = await Review.find({carId:id}).populate('userId').sort({_id: -1});
+  return result;
+}
 
 const singleUserReview = async (id: string) => {
   const result = await Review.find({ userId: id });
   return result;
 };
 
-export const reviewServices = { createReview, getReview, singleUserReview };
+export const reviewServices = { createReview, getReview, singleUserReview, getSingleCarReview };

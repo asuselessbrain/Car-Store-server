@@ -347,7 +347,6 @@ const login = async (payload: { email: string; password: string }) => {
   await sendOrderConfirmationMail('ahmedshohagarfan@gmail.com', payload?.email, "Your OTP Code for Car Store Account Login", emailOTP);
 
   const setOtpInDB = await User?.findOneAndUpdate({ email: payload?.email }, { $set: { otp, otpExpire, loginVerification: false } }, { new: true })
-  console.log(setOtpInDB)
 
   return { email: setOtpInDB?.email };
 };

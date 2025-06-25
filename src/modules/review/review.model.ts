@@ -2,6 +2,11 @@ import mongoose, { model, Schema } from 'mongoose';
 import { IReview } from './review.interface';
 
 const reviewSchema = new Schema<IReview>({
+  carId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: [true, 'Car Id is required!'],
+    ref: 'Car',
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: [true, 'User Id is required!'],
@@ -12,7 +17,6 @@ const reviewSchema = new Schema<IReview>({
     type: String,
     required: [true, 'Comment is Required!'],
     minlength: [50, 'Comment must be at least 50 characters long!'],
-    maxlength: [180, 'Comment cannot exceed 180 characters!'],
   },
 });
 

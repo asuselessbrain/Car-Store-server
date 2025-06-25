@@ -8,7 +8,7 @@ const createCars = catchAsync(async (req: Request, res: Response) => {
   const car = req.body;
   const user = req.user;
 
-  const result = await createCarServices.createCarInDB(req?.files, car, user);
+  const result = await createCarServices.createCarInDB(req?.files, car);
   responser(res, {
     statusCode: StatusCodes.CREATED,
     message: 'Car created successfully',

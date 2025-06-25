@@ -12,6 +12,7 @@ reviewRouter.post(
 );
 
 reviewRouter.get('/get-review', reviewController.getReview);
+reviewRouter.get("/:id", reviewController.getSingleCarReview);
 reviewRouter.get(
   '/get-single-user-review',
   auth(USER_ROLE.user),
