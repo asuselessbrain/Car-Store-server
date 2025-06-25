@@ -26,81 +26,117 @@ const register = async (file: any, payload: IUser) => {
 
   const emailOTP = `<!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
-  <title>Registration OTP</title>
+  <title>Registration OTP - AutoSphere</title>
   <style>
     body {
-      background-color: #111;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Light & professional gradient */
+      color: #333;
       font-family: Arial, sans-serif;
       padding: 20px;
-      color: #fff;
     }
+
     .container {
-      background-color: #1f1f1f;
-      border-radius: 10px;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
       max-width: 500px;
       margin: auto;
-      padding: 30px;
-      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      text-align: left;
     }
-    .title {
-      font-size: 24px;
-      margin-bottom: 10px;
-      color: #00bcd4;
+
+    .logo {
+      width: 100px;
+      margin-bottom: 20px;
     }
-    .message {
-      font-size: 16px;
-      margin: 10px 0;
-    }
+
     .otp {
-      font-size: 36px;
+      font-size: 32px;
       font-weight: bold;
-      background-color: #333;
+      color: #fff;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
       padding: 12px 24px;
-      border-radius: 8px;
+      border-radius: 10px;
+      text-align: center;
+      letter-spacing: 4px;
       display: inline-block;
       margin: 20px 0;
-      color: #ffffff;
-      letter-spacing: 4px;
     }
+
     .note {
       font-size: 14px;
-      color: #ccc;
-      margin-top: 10px;
+      color: #666;
+      text-align: center;
     }
+
     .footer {
-      font-size: 12px;
-      color: #888;
       margin-top: 30px;
-      line-height: 1.5;
+      font-size: 12px;
+      color: #777;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
-    .link {
-      color: #00bcd4;
+
+    a {
+      color: #0056b3;
       text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .header-title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #2a5298;
+    }
+
+    .subtext {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 10px;
     }
   </style>
 </head>
+
 <body>
   <div class="container">
-    <div class="title">Welcome to AutoSphere!</div>
-    <p class="message">Hi <strong>${firstName} ${lastName}</strong>,</p>
-    <p class="message">Thank you for registering with us. To complete your registration, please verify your email using the One-Time Password (OTP) below:</p>
-    
+    <!-- Logo & Brand -->
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <img src="https://i.ibb.co/GfMpgKfV/logo.png" alt="AutoSphere Logo" class="logo" />
+      <h2 style="color: #2b2b2b;">AutoSphere</h2>
+    </div>
+
+    <!-- Header Text -->
+    <div class="header-title">Welcome to AutoSphere!</div>
+    <p class="subtext">Hi <strong>${firstName} ${lastName}</strong>,</p>
+    <p class="subtext">To complete your registration, please use the OTP below:</p>
+
+    <!-- OTP -->
     <div class="otp">${otp}</div>
 
-    <p class="note">⚠️ This OTP is valid for <strong>5 minutes</strong> only.</p>
-    <p class="note">If you did not register for AutoSphere, you can safely ignore this email.</p>
+    <!-- Notes -->
+    <p class="note">This OTP is valid for <strong>5 minutes</strong>.</p>
+    <p class="note">If you didn’t initiate this request, please ignore this message.</p>
 
+    <!-- Footer -->
     <div class="footer">
-      AutoSphere — A Store Platform<br>
-      <a href="https://auto-sphere-ashy.vercel.app" class="link">https://auto-sphere-ashy.vercel.app</a><br>
-      📞 +8801615391684<br>
-      📍 Level-2, 45/1, College Road, Patuakhali Sadar, Patuakhali
+      <p>AutoSphere — A Store Platform</p>
+      <a href="https://auto-sphere-ashy.vercel.app">https://auto-sphere-ashy.vercel.app</a>
+      <p>📞 +8801615391684</p>
+      <p>📍 Level-2, 45/1, College Road, Patuakhali Sadar, Patuakhali</p>
     </div>
   </div>
 </body>
+
 </html>
+
 `
 
   await sendOrderConfirmationMail('ahmedshohagarfan@gmail.com', email, "Your OTP Code for Car Store Account Verification", emailOTP)
@@ -224,55 +260,87 @@ const login = async (payload: { email: string; password: string }) => {
   const emailOTP = `
   <!DOCTYPE html>
 <html>
+
 <head>
   <style>
     body {
-      background-color: #111;
-      color: #fff;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Light & professional gradient */
+      color: #333;
       font-family: Arial, sans-serif;
       padding: 20px;
     }
+
     .container {
-      background-color: #1f1f1f;
+      background-color: #fff;
       padding: 30px;
-      border-radius: 10px;
+      border-radius: 12px;
       max-width: 500px;
       margin: auto;
-      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      text-align: left;
     }
+
+    .logo {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+
     .otp {
       font-size: 32px;
       font-weight: bold;
-      color: #ffffff;
+      color: #2b2b2b;
       margin: 20px 0;
+      text-align: center;
     }
+
     .note {
       font-size: 14px;
-      color: #ccc;
+      color: #666;
+      text-align: center;
     }
+
     .footer {
       margin-top: 30px;
       font-size: 12px;
-      color: #aaa;
+      color: #777;
+    }
+
+    a {
+      color: #0056b3;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
+
 <body>
   <div class="container">
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <img src="https://i.ibb.co/GfMpgKfV/logo.png" alt="AutoSphere Logo" class="logo" />
+      <h2 style="color: #2b2b2b;">AutoSphere</h2>
+    </div>
+
     <h2>Your One-Time Password</h2>
     <p>Dear <strong>${user?.firstName} ${user?.lastName}</strong>,</p>
     <p>Here is your One-Time Password to securely log in to your account:</p>
+
     <div class="otp">${otp}</div>
+
     <p class="note">Note: This OTP is valid for 5 minutes.</p>
     <p class="note">If you did not request this OTP, please disregard this email.</p>
-    <div class="footer">
-      AutoSphere a Store Platform<br>
-      https://auto-sphere-ashy.vercel.app<br>
-      +8801615391684<br>
-      Level-2, 45/1, College Road, Patuakhali Sadar, Patuakhali
+
+    <div class="footer" style="display: flex; flex-direction: column; gap: 2px;">
+      <p>AutoSphere — A Store Platform</p><br>
+      <a href="https://auto-sphere-ashy.vercel.app">https://auto-sphere-ashy.vercel.app</a><br>
+      <p>📞 +8801615391684</p><br>
+      <p>📍 Level-2, 45/1, College Road, Patuakhali Sadar, Patuakhali</p>
     </div>
   </div>
 </body>
+
 </html>
   `
 
