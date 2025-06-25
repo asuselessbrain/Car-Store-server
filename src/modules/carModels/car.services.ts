@@ -5,7 +5,9 @@ import { CarModel } from './car.model';
 
 const createCarInDB = async (files: any, car: Cars) => {
 
-  const imageUploderPromise = files.map((file: any)=> sendImageToCloudinary(file?.path, car?.name as string))
+  const imageFiles = files?.images || []
+
+  const imageUploderPromise = imageFiles?.map((file: any)=> sendImageToCloudinary(file?.path, car?.name as string))
 
   const uploadImage = await Promise.all(imageUploderPromise)
 
@@ -14,7 +16,6 @@ const createCarInDB = async (files: any, car: Cars) => {
   const carInfo = {
     ...car,
     images: secureUrls
-
   }
   const result = await CarModel.create(carInfo);
   return result;

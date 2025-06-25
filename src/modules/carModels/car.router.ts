@@ -20,7 +20,7 @@ const carValidator = async (
   }
 };
 
-router.post('/', upload.array('images', 5),
+router.post('/', upload.fields([{name: "images"}]),
   (req, res, next: NextFunction) => {
     req.body = JSON.parse(req?.body?.data);
     next()

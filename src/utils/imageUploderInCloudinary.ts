@@ -13,7 +13,7 @@ export const sendImageToCloudinary = async (path: string, name: string) => {
     try {
         const result = await cloudinary.uploader
             .upload(path, {
-                public_id: name,
+                public_id: `${name}-${Date.now()}`,
             })
         fs.unlink(path, (err) => {
             if (err) {
