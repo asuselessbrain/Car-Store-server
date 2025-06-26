@@ -21,4 +21,10 @@ const singleUserReview = async (id: string) => {
   return result;
 };
 
-export const reviewServices = { createReview, getReview, singleUserReview, getSingleCarReview };
+const updateUserReview = async (id: string, data: IReview) => {
+  const result = await Review.findOneAndUpdate({_id: id}, data, {new: true})
+
+  return result;
+};
+
+export const reviewServices = { createReview, getReview, singleUserReview, getSingleCarReview, updateUserReview };

@@ -19,4 +19,6 @@ reviewRouter.get(
 );
 reviewRouter.get("/:id", reviewController.getSingleCarReview);
 
+reviewRouter.put('/:reviewId', auth(USER_ROLE.user), reviewController.updateUserReview);
+
 export default reviewRouter;
