@@ -60,10 +60,22 @@ const updateUserReview = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getSingleReview = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.reviewId;
+  const result = await reviewServices.getSingleReviewFromDB(id);
+  
+  res.status(200).json({
+    message: 'Review retrieved successfully',
+    success: true,
+    data: result,
+  });
+});
+
 export const reviewController = {
   createReview,
   getReview,
   getSingleUserReview,
   getSingleCarReview,
-  updateUserReview
+  updateUserReview,
+  getSingleReview
 };

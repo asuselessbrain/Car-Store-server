@@ -27,4 +27,9 @@ const updateUserReview = async (id: string, data: IReview) => {
   return result;
 };
 
-export const reviewServices = { createReview, getReview, singleUserReview, getSingleCarReview, updateUserReview };
+const getSingleReviewFromDB = async (id: string) => {
+  const result = await Review.findById(id);
+  return result;
+};
+
+export const reviewServices = { createReview, getReview, singleUserReview, getSingleCarReview, updateUserReview, getSingleReviewFromDB };
