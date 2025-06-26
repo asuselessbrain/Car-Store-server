@@ -6,15 +6,6 @@ import { IOrder } from './order.interface';
 import { OrderModel } from './order.medel';
 import { orderUtils } from './order.utils';
 
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  role: string;
-  userStatus: string;
-  __v: number;
-}
-
 interface Car {
   _id: string;
   brand: string;
@@ -223,22 +214,60 @@ const verifyPayment = async (userEmail: string, order_id: string) => {
       },
     )
       .populate<{ car: Car }>('car')
-      .populate<{ userId: User }>('userId');
+      .populate<{ userId: IUser }>('userId');
     const mailBody = `
-                    <h1>Order Confirmation</h1>
-                    <p><strong>Customer Name:</strong> ${res?.userId?.name}</p>
-                    <p><strong>Order ID:</strong> ${res?._id}</p>
-                    <p><strong>Product:</strong> ${res?.car?.brand} - ${res?.car?.model}</p>
-                    <p><strong>Category:</strong> ${res?.car?.category}</p>
-                    <p><strong>Price:</strong> ${res?.car?.price} BDT</p>
-                    <p><strong>Quantity:</strong> ${res?.quantity}</p>
-                    <p><strong>Total:</strong> ${res?.totalPrice} BDT</p>
-                    <p><strong>Status:</strong> ${res?.status}</p>`;
+  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9;">
+    <h2 style="color: #2c3e50; text-align: center;">🚗 Order Confirmation</h2>
+    <p style="font-size: 16px;">Hello <strong>${res?.userId?.firstName} ${res?.userId?.lastName}</strong>,</p>
+    <p style="font-size: 16px;">Thank you for your order! Here are your order details:</p>
+
+    <table style="width: 100%; font-size: 15px; border-collapse: collapse; margin-top: 15px;">
+      <tr>
+        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Order ID:</strong></td>
+        <td style="padding: 8px; border: 1px solid #ddd;">${res?._id}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Product:</strong></td>
+        <td style="padding: 8px; border: 1px solid #ddd;">${res?.car?.brand} - ${res?.car?.model}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Category:</strong></td>
+        <td style="padding: 8px; border: 1px solid #ddd;">${res?.car?.category}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Price:</strong></td>
+        <td style="padding: 8px; border: 1px solid #ddd;">${res?.car?.price.toLocaleString()} BDT</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Quantity:</strong></td>
+        <td style="padding: 8px; border: 1px solid #ddd;">${res?.quantity}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Total:</strong></td>
+        <td style="padding: 8px; border: 1px solid #ddd;"><strong>${res?.totalPrice.toLocaleString()} BDT</strong></td>
+      </tr>
+      <tr>
+        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Status:</strong></td>
+        <td style="padding: 8px; border: 1px solid #ddd;">${res?.status}</td>
+      </tr>
+    </table>
+
+    <p style="margin-top: 20px; font-size: 14px; color: #555;">We will notify you once your product is shipped. If you have any questions, feel free to contact our support.</p>
+    
+     <p style="font-size: 14px;">
+      Regards, <br/><strong>The AutoSphere Team</strong>
+    </p>
+    
+    <div style="margin-top: 20px; text-align: center; font-size: 13px; color: #999;">
+      © ${new Date().getFullYear()} Car Store. All rights reserved.
+    </div>
+  </div>
+`;
 
     sendOrderConfirmationMail(
       'ahmedshohagarfan@gmail.com',
       userEmail,
-      'Order Confirmation',
+      `Order Confirmed - ${res?.car?.brand} ${res?.car?.model} | Order ID: ${res?._id}`,
       mailBody,
     );
   }

@@ -8,6 +8,8 @@ const createReview = catchAsync(async (req: Request, res: Response) => {
   const user = req?.user;
   const payload = req.body;
   payload.userId = user?._id;
+
+  console.log(payload)
   const result = await reviewServices.createReview(payload);
   responser(res, {
     statusCode: StatusCodes.OK,

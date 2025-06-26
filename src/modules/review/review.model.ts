@@ -18,6 +18,10 @@ const reviewSchema = new Schema<IReview>({
     required: [true, 'Comment is Required!'],
     minlength: [50, 'Comment must be at least 50 characters long!'],
   },
-});
+},
+{
+  timestamps: true
+}
+);
 
 export const Review = model<IReview>('review', reviewSchema);
