@@ -71,11 +71,22 @@ const getSingleReview = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const deleteReview = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.reviewId;
+  await reviewServices.deleteReviewFromDB(id);
+  res.status(200).json({
+    message: 'Review deleted successfully',
+    success: true,
+    data: {},
+  });
+});
+
 export const reviewController = {
   createReview,
   getReview,
   getSingleUserReview,
   getSingleCarReview,
   updateUserReview,
-  getSingleReview
+  getSingleReview,
+  deleteReview
 };

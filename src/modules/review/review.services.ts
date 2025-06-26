@@ -32,4 +32,9 @@ const getSingleReviewFromDB = async (id: string) => {
   return result;
 };
 
-export const reviewServices = { createReview, getReview, singleUserReview, getSingleCarReview, updateUserReview, getSingleReviewFromDB };
+const deleteReviewFromDB = async (id: string) => {
+  const result = await Review.findOneAndDelete({ _id: id });
+  return result;
+};
+
+export const reviewServices = { createReview, getReview, singleUserReview, getSingleCarReview, updateUserReview, getSingleReviewFromDB,deleteReviewFromDB };
