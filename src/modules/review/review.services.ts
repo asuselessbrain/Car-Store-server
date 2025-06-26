@@ -17,7 +17,7 @@ const getSingleCarReview = async(id: string) => {
 }
 
 const singleUserReview = async (id: string) => {
-  const result = await Review.find({ userId: id });
+  const result = await Review.find({ userId: id }).populate('userId').sort({_id: -1});
   return result;
 };
 

@@ -12,11 +12,11 @@ reviewRouter.post(
 );
 
 reviewRouter.get('/get-review', reviewController.getReview);
-reviewRouter.get("/:id", reviewController.getSingleCarReview);
 reviewRouter.get(
-  '/get-single-user-review',
+  '/user-review',
   auth(USER_ROLE.user),
   reviewController.getSingleUserReview,
 );
+reviewRouter.get("/:id", reviewController.getSingleCarReview);
 
 export default reviewRouter;
