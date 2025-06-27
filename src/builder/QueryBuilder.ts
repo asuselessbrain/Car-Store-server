@@ -43,6 +43,8 @@ class QueryBuilder<T> {
       const sortOrder = this?.query?.sortOrder;
 
       sortStr = `${sortOrder === 'desc' ? '-' : ''}${sortBy}`;
+    } else{
+      sortStr = '-_id'
     }
 
     this.modelQuery = this.modelQuery.sort(sortStr as string);
