@@ -22,7 +22,7 @@ const createCarInDB = async (files: any, car: Cars) => {
 };
 
 const getAllCarsFromDB = async (payload: Record<string, unknown>) => {
-  const searchFields = ['brand', 'model'];
+  const searchFields = ['name'];
 
   const carQuery = new QueryBuilder(CarModel.find(), payload)
     .search(searchFields)

@@ -9,7 +9,6 @@ const createReview = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
   payload.userId = user?._id;
 
-  console.log(payload)
   const result = await reviewServices.createReview(payload);
   responser(res, {
     statusCode: StatusCodes.OK,
@@ -51,6 +50,8 @@ const getSingleUserReview = catchAsync(async (req: Request, res: Response) => {
 const updateUserReview = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.reviewId;
   const updatedReview = req.body;
+
+  console.log(updatedReview)
 
   const result = await reviewServices.updateUserReview(id, updatedReview);
   res.status(200).json({
