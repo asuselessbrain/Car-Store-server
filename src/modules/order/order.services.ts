@@ -5,9 +5,30 @@ import { IUser } from '../userModels/user.interface';
 import { IOrder } from './order.interface';
 import { OrderModel } from './order.medel';
 import { orderUtils } from './order.utils';
+import puppeteer from 'puppeteer';
+
+export async function generatePdfBuffer(html: string): Promise<Buffer> {
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
+  const page = await browser.newPage();
+  await page.setContent(html, { waitUntil: 'networkidle0' });
+
+  const pdfData = await page.pdf({
+    format: 'A4',
+    printBackground: true,
+    margin: { top: '10mm', right: '10mm', bottom: '10mm', left: '10mm' },
+  });
+
+  await browser.close();
+
+  return Buffer.from(pdfData); // <-- ✅ fix here
+}
+
 
 interface Car {
   _id: string;
+  name: string;
   brand: string;
   model: string;
   category: string;
@@ -215,6 +236,97 @@ const verifyPayment = async (userEmail: string, order_id: string) => {
     )
       .populate<{ car: Car }>('car')
       .populate<{ userId: IUser }>('userId');
+
+     const invoiceHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Invoice</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f9f9f9; }
+    .invoice-box {
+      max-width: 800px;
+      margin: auto;
+      padding: 30px;
+      border: 1px solid #eee;
+      background: #fff;
+      font-size: 14px;
+    }
+    table {
+      width: 100%;
+      line-height: inherit;
+      text-align: left;
+      border-collapse: collapse;
+    }
+    td, th {
+      padding: 8px;
+      border: 1px solid #ddd;
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .footer {
+      margin-top: 30px;
+      font-size: 13px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="invoice-box">
+    <div class="logo">
+      <img src="https://i.ibb.co/GfMpgKfV/logo.png" alt="AutoSphere Logo" width="120" />
+    </div>
+    <h2 style="text-align: center;">Invoice - AutoSphere</h2>
+    
+    <p><strong>Name:</strong> ${res?.userId?.firstName} ${res?.userId?.lastName}</p>
+    <p><strong>Email:</strong> ${res?.userId?.email}</p>
+    <p><strong>Order ID:</strong> ${res?._id}</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Car</th>
+          <th>Brand</th>
+          <th>Category</th>
+          <th>Unit Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>${res?.car?.name}</td>
+          <td>${res?.car?.brand}</td>
+          <td>${res?.car?.category}</td>
+          <td>${res?.car?.price.toLocaleString()} BDT</td>
+          <td>${res?.quantity}</td>
+          <td><strong>${res?.totalPrice.toLocaleString()} BDT</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Status:</strong> ${res?.status}</p>
+    <p>Thank you for your purchase!</p>
+
+    <div class="footer">
+      <p><strong>Issued by:</strong> AutoSphere</p>
+      <p><strong>Date:</strong> ${new Date().toLocaleDateString('en-BD', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+      <p><strong>Contact:</strong> support@autosphere.com | +8801XXXXXXXXX</p>
+      <p>We appreciate your business. Please reach out if you have any questions or concerns.</p>
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+
+     // Generate PDF buffer using Puppeteer
+    const pdfBuffer = await generatePdfBuffer(invoiceHtml);
+
+
     const mailBody = `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9;">
     <h2 style="color: #2c3e50; text-align: center;">🚗 Order Confirmation</h2>
@@ -264,11 +376,17 @@ const verifyPayment = async (userEmail: string, order_id: string) => {
   </div>
 `;
 
-    sendOrderConfirmationMail(
+
+
+      await sendOrderConfirmationMail(
       'ahmedshohagarfan@gmail.com',
       userEmail,
       `Order Confirmed - ${res?.car?.brand} ${res?.car?.model} | Order ID: ${res?._id}`,
       mailBody,
+      {
+        filename: `Invoice-${res?._id}.pdf`,
+        content: pdfBuffer,
+      }
     );
   }
   return verifiedPayment;
