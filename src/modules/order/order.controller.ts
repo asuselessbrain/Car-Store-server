@@ -164,6 +164,16 @@ const updateStatusByUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const popularCars = catchAsync(async (req: Request, res: Response) => {
+  const result = await orderServices.populerCars();
+
+  responser(res, {
+    statusCode: StatusCodes.OK,
+    message: 'Popular Cars retrive successfully',
+    data: result,
+  });
+})
+
 export const orderController = {
   createOrder,
   getAllOrders,
@@ -174,4 +184,5 @@ export const orderController = {
   sellByBrand,
   totalRevenue,
   verifyPayment,
+  popularCars
 };
