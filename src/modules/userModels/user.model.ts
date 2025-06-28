@@ -48,9 +48,29 @@ const userSchema = new Schema<IUser>({
     type: Date,
     required: [true, "Please provide your date of birth"]
   },
-  address: {
+  district: {
     type: String,
-    required: [true, "Please provide your address"]
+    required: [true, "Please provide your district"]
+  },
+
+  upazila: {
+    type: String,
+    required: [true, "Please provide your upazila"]
+  },
+
+  postOffice: {
+    type: String,
+    required: [true, "Please provide your postOffice"]
+  },
+
+  postalCode: {
+    type: String,
+    required: [true, "Please provide your postalCode"]
+  },
+
+  about: {
+    type: String,
+    required: [true, "Please provide your bio"]
   },
 
   password: {

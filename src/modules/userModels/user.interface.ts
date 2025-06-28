@@ -9,7 +9,11 @@ export interface IUser {
   password: string;
   gender: 'male' | 'female' | 'others';
   dob: Date;
-  address: string;
+  district: string;
+  upazila: string;
+  postOffice: string;
+  postalCode: string;
+  about: string;
   profileImg: string | null;
   role: 'user' | 'admin';
   userStatus: 'active' | 'blocked';

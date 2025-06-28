@@ -26,9 +26,25 @@ export const userValidationSchema = z.object({
 
     dob: z.coerce.date({ required_error: 'Date of birth is required' }),
 
-    address: z
-      .string({ required_error: 'Address is required' })
-      .min(5, 'Address must be at least 5 characters'),
+    district: z
+      .string({ required_error: 'District is required' })
+      .min(5, 'District must be at least 5 characters'),
+    
+    upazila: z
+      .string({ required_error: 'Upazila is required' })
+      .min(5, 'Upazila must be at least 5 characters'),
+
+    postOffice: z
+      .string({ required_error: 'Post Office is required' })
+      .min(5, 'Post Office must be at least 5 characters'),
+
+    postalCode: z
+      .string({ required_error: 'Postal Code is required' })
+      .min(5, 'Postal Code must be at least 5 characters'),
+    
+    about: z
+      .string({ required_error: 'About is required' })
+      .min(5, 'About must be at least 5 characters'),
 
     password: z
       .string({ required_error: 'Password is required' })
