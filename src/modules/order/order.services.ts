@@ -1,5 +1,6 @@
 import config from '../../config';
 import sendOrderConfirmationMail from '../../utils/nodemainle';
+import { Cars } from '../carModels/car.interface';
 import { CarModel } from '../carModels/car.model';
 import { IUser } from '../userModels/user.interface';
 import { IOrder } from './order.interface';
@@ -25,15 +26,6 @@ export async function generatePdfBuffer(html: string): Promise<Buffer> {
   return Buffer.from(pdfData); // <-- ✅ fix here
 }
 
-
-interface Car {
-  _id: string;
-  name: string;
-  brand: string;
-  model: string;
-  category: string;
-  price: number;
-}
 
 const updateCarInventoryInDB = async (carId: string, orderQuantity: number) => {
   const car = await CarModel.findById(carId);
@@ -234,7 +226,7 @@ const verifyPayment = async (userEmail: string, order_id: string) => {
         new: true,
       },
     )
-      .populate<{ car: Car }>('car')
+      .populate<{ car: Cars }>('car')
       .populate<{ userId: IUser }>('userId');
 
      const invoiceHtml = `
@@ -392,6 +384,27 @@ const verifyPayment = async (userEmail: string, order_id: string) => {
   return verifiedPayment;
 };
 
+const populerCars = async() => {
+  const result = await OrderModel.aggregate([
+    {$group: {_id: '$car',  totalQuantity: {$sum: "$quantity"}}},
+    {
+      $lookup: {
+        from: "cars",
+        foreignField: "_id",
+        localField: "_id",
+        as: "carDetails"
+      }
+    },
+    {
+      $unwind: "$carDetails"
+    },
+    {
+      $sort: {totalQuantity: -1}
+    }
+  ]).limit(8)
+  return result;
+}
+
 export const orderServices = {
   updateCarInventoryInDB,
   createOrderInDB,
@@ -403,4 +416,5 @@ export const orderServices = {
   sellByBrand,
   totalRevenue,
   verifyPayment,
+  populerCars
 };
