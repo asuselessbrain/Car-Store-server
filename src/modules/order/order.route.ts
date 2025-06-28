@@ -41,4 +41,6 @@ orderRoute.put(
   orderController.updateStatusByUser,
 );
 
+orderRoute.get("/popular-cars", auth(USER_ROLE.admin), orderController.popularCars)
+
 export const orderRouter = orderRoute;
