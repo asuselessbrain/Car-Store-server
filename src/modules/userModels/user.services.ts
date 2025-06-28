@@ -19,8 +19,9 @@ const createAdmin = async (file: any, payload: IUser) => {
 };
 
 const getUser = async (payload: Record<string, unknown>) => {
+  console.log(payload)
 
-  const searchFields = ['firstName', 'lastName'];
+  const searchFields = ['email'];
 
   const userQuery = new QueryBuilder(User.find(), payload)
     .search(searchFields)

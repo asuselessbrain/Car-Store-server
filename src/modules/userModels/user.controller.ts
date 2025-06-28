@@ -20,7 +20,7 @@ const createAdmin = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await userService.getUser();
+  const result = await userService.getUser(req.query);
 
   responser(res, {
     statusCode: StatusCodes.OK,
