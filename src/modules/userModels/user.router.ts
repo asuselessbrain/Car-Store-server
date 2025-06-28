@@ -26,7 +26,6 @@ userRouter.get(
   userController.getSingleUser,
 );
 
-// TODO: need to update
 userRouter.put('/:userId', auth(USER_ROLE.user), userController.updateUser);
 
 userRouter.put(

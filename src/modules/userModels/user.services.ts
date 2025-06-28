@@ -1,3 +1,4 @@
+import QueryBuilder from '../../builder/QueryBuilder';
 import config from '../../config';
 import { sendImageToCloudinary } from '../../utils/imageUploderInCloudinary';
 import { IUser } from './user.interface';
@@ -17,9 +18,20 @@ const createAdmin = async (file: any, payload: IUser) => {
   return result;
 };
 
-const getUser = async () => {
-  const result = await User.find().sort({ _id: -1 });
-  return result;
+const getUser = async (payload: Record<string, unknown>) => {
+
+  const searchFields = ['firstName', 'lastName'];
+
+  const userQuery = new QueryBuilder(User.find(), payload)
+    .search(searchFields)
+    .filter()
+    .sort()
+    .pagination();
+
+  const meta = await userQuery.countTotal();
+  const result = await userQuery.modelQuery;
+
+  return { meta, result };
 };
 
 const getSingleUser = async (id: string) => {
