@@ -28,6 +28,7 @@ userRouter.get(
 
 // TODO: need to update
 userRouter.put('/:userId', auth(USER_ROLE.user), userController.updateUser);
+
 userRouter.put(
   '/change-password/:id',
   auth(USER_ROLE.user),

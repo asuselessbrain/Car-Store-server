@@ -39,8 +39,7 @@ export const userValidationSchema = z.object({
       .min(5, 'Post Office must be at least 5 characters'),
 
     postalCode: z
-      .string({ required_error: 'Postal Code is required' })
-      .min(5, 'Postal Code must be at least 5 characters'),
+      .string({ required_error: 'Postal Code is required' }),
     
     about: z
       .string({ required_error: 'About is required' })

@@ -20,9 +20,9 @@ const register = async (file: any, payload: IUser) => {
   const otpExpire = new Date(Date.now() + 5 * 60 * 1000);
 
 
-  const { firstName, lastName, email, phoneNumber, gender, dob, address, password } = payload;
+  const { firstName, lastName, email, phoneNumber, gender, dob, district, upazila, postOffice, postalCode, about, password } = payload;
 
-  const userInfo = { firstName, lastName, email, phoneNumber, gender, dob, address, password, otp, otpExpire, profileImg }
+  const userInfo = { firstName, lastName, email, phoneNumber, gender, dob, district, upazila, postOffice, postalCode, about, password, otp, otpExpire, profileImg }
 
   const emailOTP = `<!DOCTYPE html>
 <html>

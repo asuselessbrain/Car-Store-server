@@ -52,7 +52,7 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
 
   responser(res, {
     statusCode: StatusCodes.OK,
-    message: 'User name updated successfully',
+    message: 'User updated successfully',
     data: result,
   });
 });
