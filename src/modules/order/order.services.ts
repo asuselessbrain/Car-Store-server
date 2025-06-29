@@ -1,3 +1,5 @@
+import { PipelineStage } from 'mongoose';
+import QueryBuilder from '../../builder/QueryBuilder';
 import config from '../../config';
 import sendOrderConfirmationMail from '../../utils/nodemainle';
 import { Cars } from '../carModels/car.interface';
@@ -101,13 +103,109 @@ const createOrderInDB = async (
   return payment.checkout_url;
 };
 
-const getAllOrdersFromDB = async () => {
-  const result = await OrderModel.find()
-    .populate('userId')
-    .populate('car')
-    .sort({ _id: -1 });
-  return result;
+const getAllOrdersFromDB = async (payload: Record<string, any>) => {
+  const {
+    searchTerm = "",
+    page = 1,
+    limit = 10,
+    sortBy = "createdAt",
+    sortOrder = "desc",
+    status,
+    paymentStatus,
+  } = payload;
+
+  const skip = (Number(page) - 1) * Number(limit);
+
+  const sortStage: PipelineStage.Sort = {
+    $sort: {
+      [String(sortBy)]: sortOrder === "desc" ? -1 : 1,
+    },
+  };
+
+  const matchConditions: Record<string, any> = {};
+
+  // Search by user email
+  if (searchTerm) {
+    matchConditions["user.email"] = { $regex: searchTerm, $options: "i" };
+  }
+
+  // Filter by status
+  if (status) {
+    matchConditions["status"] = status;
+  }
+
+  // Filter by paymentStatus
+  if (paymentStatus) {
+    matchConditions["paymentStatus"] = paymentStatus;
+  }
+
+  // Main data query pipeline
+  const pipeline: PipelineStage[] = [
+    {
+      $lookup: {
+        from: "users",
+        localField: "userId",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    { $unwind: "$user" },
+    {
+      $lookup: {
+        from: "cars",
+        localField: "car",
+        foreignField: "_id",
+        as: "car",
+      },
+    },
+    { $unwind: "$car" },
+    { $match: matchConditions },
+    sortStage,
+    { $skip: skip },
+    { $limit: Number(limit) },
+  ];
+
+  const data = await OrderModel.aggregate(pipeline);
+
+  // Count query pipeline (same filters and joins)
+  const countPipeline: PipelineStage[] = [
+    {
+      $lookup: {
+        from: "users",
+        localField: "userId",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    { $unwind: "$user" },
+    {
+      $lookup: {
+        from: "cars",
+        localField: "car",
+        foreignField: "_id",
+        as: "car",
+      },
+    },
+    { $unwind: "$car" },
+    { $match: matchConditions },
+    { $count: "total" },
+  ];
+
+  const totalResult = await OrderModel.aggregate(countPipeline);
+  const totalCount = totalResult[0]?.total || 0;
+
+  return {
+    meta: {
+      page: Number(page),
+      limit: Number(limit),
+      total: totalCount,
+      totalPage: Math.ceil(totalCount / Number(limit)),
+    },
+    result: data,
+  };
 };
+
+
 
 const calculateTotalRevenue = async () => {
   const result = await OrderModel.aggregate([

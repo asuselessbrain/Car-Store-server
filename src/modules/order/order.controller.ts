@@ -59,7 +59,7 @@ const verifyPayment = catchAsync(async (req, res) => {
 });
 
 const getAllOrders = catchAsync(async (req: Request, res: Response) => {
-  const orders = await orderServices.getAllOrdersFromDB();
+  const orders = await orderServices.getAllOrdersFromDB(req?.query);
 
   responser(res, {
     statusCode: StatusCodes.OK,
