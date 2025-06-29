@@ -32,7 +32,12 @@ app.use('/api/user', userRouter);
 app.use('/api/review', reviewRouter);
 app.use('/api/contact', contactRouter);
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
+  res.json({
+    Welcome: "Welcome to AutoSphere Backend",
+    Developer: "Arfan Ahmed",
+    Faculty: "Computer Science and Enginnering",
+    University: "Patuakhali Science and Technology University"
+  });
 });
 
 app.use(globalErrorHandlear);

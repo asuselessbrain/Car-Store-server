@@ -47,6 +47,7 @@ class QueryBuilder<T> {
       sortStr = '-_id'
     }
 
+    console.log("Sort string:", sortStr);
     this.modelQuery = this.modelQuery.sort(sortStr as string);
 
     return this;
