@@ -19,7 +19,8 @@ app.use(
       'http://localhost:5173',
       'https://car-store-frontend-delta.vercel.app',
       'https://auto-sphere-ashy.vercel.app',
-      'exp://192.168.0.18:8081'
+      'exp://192.168.0.18:8081',
+      '*'
     ],
     credentials: true,
   }),

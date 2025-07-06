@@ -59,9 +59,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
   responser(res, {
     statusCode: StatusCodes.ACCEPTED,
     message: 'OTP sent to your email',
-    data: {
-      email: result,
-    },
+    data: result,
   });
 });
 

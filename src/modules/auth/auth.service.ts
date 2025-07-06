@@ -348,7 +348,7 @@ const login = async (payload: { email: string; password: string }) => {
 
   const setOtpInDB = await User?.findOneAndUpdate({ email: payload?.email }, { $set: { otp, otpExpire, loginVerification: false } }, { new: true })
 
-  return { email: setOtpInDB?.email };
+  return { email: setOtpInDB?.email, role: setOtpInDB?.role };
 };
 
 const changePassword = async (
