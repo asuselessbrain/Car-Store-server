@@ -20,7 +20,7 @@ app.use(
       'https://car-store-frontend-delta.vercel.app',
       'https://auto-sphere-ashy.vercel.app',
       'exp://192.168.0.18:8081',
-      '*'
+      'http://ug2002040.cse.pstu.ac.bd'
     ],
     credentials: true,
   }),
