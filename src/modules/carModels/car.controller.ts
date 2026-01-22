@@ -5,10 +5,12 @@ import { StatusCodes } from 'http-status-codes';
 import { catchAsync } from '../../utils/catchAsync';
 
 const createCars = catchAsync(async (req: Request, res: Response) => {
+  console.log("arfan")
   const car = req.body;
-  const user = req.user;
 
-  const result = await createCarServices.createCarInDB(req?.files, car);
+  console.log(car)
+
+  const result = await createCarServices.createCarInDB(car);
   responser(res, {
     statusCode: StatusCodes.CREATED,
     message: 'Car created successfully',

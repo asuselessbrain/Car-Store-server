@@ -3,22 +3,8 @@ import { sendImageToCloudinary } from '../../utils/imageUploderInCloudinary';
 import { Cars } from './car.interface';
 import { CarModel } from './car.model';
 
-const createCarInDB = async (files: any, car: Cars) => {
-  const imageFiles = files?.images || [];
-
-  const imageUploderPromise = imageFiles?.map((file: any) =>
-    sendImageToCloudinary(file?.path, car?.name as string),
-  );
-
-  const uploadImage = await Promise.all(imageUploderPromise);
-
-  const secureUrls = uploadImage.map((upload: any) => upload.secure_url);
-
-  const carInfo = {
-    ...car,
-    images: secureUrls,
-  };
-  const result = await CarModel.create(carInfo);
+const createCarInDB = async (car: Cars) => {
+  const result = await CarModel.create(car);
   return result;
 };
 

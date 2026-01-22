@@ -22,11 +22,6 @@ const carValidator = async (
 
 router.post(
   '/',
-  upload.fields([{ name: 'images' }]),
-  (req, res, next: NextFunction) => {
-    req.body = JSON.parse(req?.body?.data);
-    next();
-  },
   carValidator,
   auth(USER_ROLE.admin),
   carModels.createCars,
