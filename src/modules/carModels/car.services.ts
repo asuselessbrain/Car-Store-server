@@ -61,11 +61,21 @@ const deleteCarFromDB = async (id: string) => {
   return result;
 };
 
+const similarCarsInDB = async (carId: string, model: string) => {
+  const result = await CarModel.find({
+    _id: { $ne: carId },
+    model: model,
+    inStock: true,
+  }).limit(10);
+  return result;
+}
+
 export const createCarServices = {
   createCarInDB,
   getAllCarsFromDB,
   getSingleCarFromDB,
   updateCarInDB,
   deleteCarFromDB,
-  getNewArrivalsFromDB
+  getNewArrivalsFromDB,
+  similarCarsInDB,
 };

@@ -33,6 +33,7 @@ router.post(
 );
 router.get('/', carModels.getAllCars);
 router.get('/new-arrivals', carModels.getNewArrivals);
+router.get('/similar/:carId/:model', carModels.similarCars);
 router.get('/:carId', carModels.getSingleCar);
 router.put('/:carId', auth(USER_ROLE.admin), carModels.updateCar);
 router.delete('/:carId', auth(USER_ROLE.admin), carModels.deleteCar);

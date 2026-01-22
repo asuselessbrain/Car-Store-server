@@ -68,11 +68,24 @@ const deleteCar = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const similarCars = catchAsync(async (req: Request, res: Response) => {
+  const carId = req.params.carId;
+  const model = req.params.model as string;
+
+  const result = await createCarServices.similarCarsInDB(carId as string, model);
+  res.status(200).json({
+    message: 'Similar cars retrieved successfully',
+    success: true,
+    data: result,
+  });
+});
+
 export const carModels = {
   createCars,
   getAllCars,
   getSingleCar,
   updateCar,
   deleteCar,
-  getNewArrivals
+  getNewArrivals,
+  similarCars,
 };
