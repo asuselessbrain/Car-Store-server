@@ -4,19 +4,20 @@ import { Cars } from './car.interface';
 import { CarModel } from './car.model';
 
 const createCarInDB = async (files: any, car: Cars) => {
+  const imageFiles = files?.images || [];
 
-  const imageFiles = files?.images || []
+  const imageUploderPromise = imageFiles?.map((file: any) =>
+    sendImageToCloudinary(file?.path, car?.name as string),
+  );
 
-  const imageUploderPromise = imageFiles?.map((file: any)=> sendImageToCloudinary(file?.path, car?.name as string))
+  const uploadImage = await Promise.all(imageUploderPromise);
 
-  const uploadImage = await Promise.all(imageUploderPromise)
-
-  const secureUrls = uploadImage.map((upload: any)=> upload.secure_url)
+  const secureUrls = uploadImage.map((upload: any) => upload.secure_url);
 
   const carInfo = {
     ...car,
-    images: secureUrls
-  }
+    images: secureUrls,
+  };
   const result = await CarModel.create(carInfo);
   return result;
 };
@@ -35,6 +36,13 @@ const getAllCarsFromDB = async (payload: Record<string, unknown>) => {
 
   return { meta, result };
 };
+
+const getNewArrivalsFromDB = async () => {
+  const result = await CarModel.find({ inStock: true })
+    .sort({ createdAt: -1 })
+    .limit(8);
+  return result;
+}
 
 const getSingleCarFromDB = async (carId: string) => {
   const result = await CarModel.findOne({ _id: carId });
@@ -59,4 +67,5 @@ export const createCarServices = {
   getSingleCarFromDB,
   updateCarInDB,
   deleteCarFromDB,
+  getNewArrivalsFromDB
 };

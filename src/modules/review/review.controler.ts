@@ -9,7 +9,6 @@ const createReview = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
   payload.userId = user?._id;
 
-
   const result = await reviewServices.createReview(payload);
   responser(res, {
     statusCode: StatusCodes.OK,
@@ -27,16 +26,16 @@ const getReview = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getSingleCarReview = catchAsync(async(req: Request, res: Response) => {
+const getSingleCarReview = catchAsync(async (req: Request, res: Response) => {
   const id = req?.params?.id;
-  const result = await reviewServices.getSingleCarReview(id);
+  const result = await reviewServices.getSingleCarReview(id as string);
 
   responser(res, {
     statusCode: StatusCodes.OK,
     message: 'Review retrieved successfully',
     data: result,
   });
-})
+});
 
 const getSingleUserReview = catchAsync(async (req: Request, res: Response) => {
   const userId = req?.user?._id;
@@ -52,9 +51,9 @@ const updateUserReview = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.reviewId;
   const updatedReview = req.body;
 
-  console.log(updatedReview)
+  console.log(updatedReview);
 
-  const result = await reviewServices.updateUserReview(id, updatedReview);
+  const result = await reviewServices.updateUserReview(id as string, updatedReview);
   res.status(200).json({
     message: 'Review updated successfully',
     success: true,
@@ -64,8 +63,8 @@ const updateUserReview = catchAsync(async (req: Request, res: Response) => {
 
 const getSingleReview = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.reviewId;
-  const result = await reviewServices.getSingleReviewFromDB(id);
-  
+  const result = await reviewServices.getSingleReviewFromDB(id as string);
+
   res.status(200).json({
     message: 'Review retrieved successfully',
     success: true,
@@ -75,7 +74,7 @@ const getSingleReview = catchAsync(async (req: Request, res: Response) => {
 
 const deleteReview = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.reviewId;
-  await reviewServices.deleteReviewFromDB(id);
+  await reviewServices.deleteReviewFromDB(id as string);
   res.status(200).json({
     message: 'Review deleted successfully',
     success: true,
@@ -90,5 +89,5 @@ export const reviewController = {
   getSingleCarReview,
   updateUserReview,
   getSingleReview,
-  deleteReview
+  deleteReview,
 };

@@ -38,7 +38,7 @@ const createContactInDb = (email: string, payload: TContact) => {
   </div>
 `;
 
-const autoReply = `
+  const autoReply = `
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 24px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #fefefe;">
   <h2 style="color: #2c3e50; text-align: center;">🤝 Thank You for Contacting AutoSphere</h2>
 
@@ -75,7 +75,7 @@ const autoReply = `
     &copy; ${new Date().getFullYear()} AutoSphere. All rights reserved.
   </div>
 </div>
-`
+`;
 
   sendOrderConfirmationMail(
     email,
@@ -86,9 +86,9 @@ const autoReply = `
   sendOrderConfirmationMail(
     'ahmedshohagarfan@gmail.com',
     payload?.email,
-    "We’ve Received Your Message – AutoSphere Support",
-    autoReply
-  )
+    'We’ve Received Your Message – AutoSphere Support',
+    autoReply,
+  );
   return result;
 };
 

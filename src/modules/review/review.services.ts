@@ -7,22 +7,31 @@ const createReview = async (payload: IReview) => {
 };
 
 const getReview = async () => {
-  const result = await Review.find().populate('userId').populate('carId').sort({ _id: -1 });
+  const result = await Review.find()
+    .populate('userId')
+    .populate('carId')
+    .sort({ _id: -1 });
   return result;
 };
 
-const getSingleCarReview = async(id: string) => {
-  const result = await Review.find({carId:id}).populate('userId').sort({_id: -1});
+const getSingleCarReview = async (id: string) => {
+  const result = await Review.find({ carId: id })
+    .populate('userId')
+    .sort({ _id: -1 });
   return result;
-}
+};
 
 const singleUserReview = async (id: string) => {
-  const result = await Review.find({ userId: id }).populate('userId').sort({_id: -1});
+  const result = await Review.find({ userId: id })
+    .populate('userId')
+    .sort({ _id: -1 });
   return result;
 };
 
 const updateUserReview = async (id: string, data: IReview) => {
-  const result = await Review.findOneAndUpdate({_id: id}, data, {new: true})
+  const result = await Review.findOneAndUpdate({ _id: id }, data, {
+    new: true,
+  });
 
   return result;
 };
@@ -37,4 +46,12 @@ const deleteReviewFromDB = async (id: string) => {
   return result;
 };
 
-export const reviewServices = { createReview, getReview, singleUserReview, getSingleCarReview, updateUserReview, getSingleReviewFromDB,deleteReviewFromDB };
+export const reviewServices = {
+  createReview,
+  getReview,
+  singleUserReview,
+  getSingleCarReview,
+  updateUserReview,
+  getSingleReviewFromDB,
+  deleteReviewFromDB,
+};

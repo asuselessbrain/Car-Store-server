@@ -7,20 +7,15 @@ export interface IUser {
   email: string;
   phoneNumber: string;
   password: string;
-  gender: 'male' | 'female' | 'others';
-  dob: Date;
-  district: string;
-  upazila: string;
-  postOffice: string;
-  postalCode: string;
-  about: string;
+  gender?: 'male' | 'female' | 'others';
+  dob?: Date;
+  district?: string;
+  upazila?: string;
+  postOffice?: string;
+  postalCode?: string;
   profileImg: string | null;
   role: 'user' | 'admin';
   userStatus: 'active' | 'blocked';
-  otp?: string;
-  verified: boolean;
-  otpExpire?: Date;
-  loginVerification: boolean
 }
 
 export type TUserRole = keyof typeof USER_ROLE;

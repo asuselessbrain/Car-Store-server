@@ -5,7 +5,7 @@ const sendOrderConfirmationMail = async (
   to: string,
   subject: string,
   html: string,
-  attachment?: { filename: string, content: Buffer }
+  attachment?: { filename: string; content: Buffer },
 ) => {
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -23,7 +23,7 @@ const sendOrderConfirmationMail = async (
     subject: subject, // Subject line
     text: 'Hello world?', // plain text body
     html: html, // html body
-  }
+  };
 
   if (attachment) {
     mailOptions.attachments = [attachment];
@@ -31,8 +31,6 @@ const sendOrderConfirmationMail = async (
 
   // send mail with defined transport object
   await transporter.sendMail(mailOptions);
-
-  
 };
 
 export default sendOrderConfirmationMail;

@@ -27,9 +27,18 @@ const getAllCars = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getNewArrivals = catchAsync(async (req: Request, res: Response) => {
+  const result = await createCarServices.getNewArrivalsFromDB();
+  res.status(200).json({
+    message: 'New arrivals retrieved successfully',
+    success: true,
+    data: result,
+  });
+});
+
 const getSingleCar = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.carId;
-  const result = await createCarServices.getSingleCarFromDB(id);
+  const result = await createCarServices.getSingleCarFromDB(id as string);
   res.status(200).json({
     message: 'Car retrieved successfully',
     success: true,
@@ -41,7 +50,7 @@ const updateCar = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.carId;
   const updatedCar = req.body;
 
-  const result = await createCarServices.updateCarInDB(id, updatedCar);
+  const result = await createCarServices.updateCarInDB(id as string, updatedCar);
   res.status(200).json({
     message: 'Car updated successfully',
     success: true,
@@ -51,7 +60,7 @@ const updateCar = catchAsync(async (req: Request, res: Response) => {
 
 const deleteCar = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.carId;
-  await createCarServices.deleteCarFromDB(id);
+  await createCarServices.deleteCarFromDB(id as string);
   res.status(200).json({
     message: 'Car deleted successfully',
     success: true,
@@ -65,4 +74,5 @@ export const carModels = {
   getSingleCar,
   updateCar,
   deleteCar,
+  getNewArrivals
 };

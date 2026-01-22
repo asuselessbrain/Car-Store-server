@@ -20,13 +20,19 @@ const carValidator = async (
   }
 };
 
-router.post('/', upload.fields([{name: "images"}]),
+router.post(
+  '/',
+  upload.fields([{ name: 'images' }]),
   (req, res, next: NextFunction) => {
     req.body = JSON.parse(req?.body?.data);
-    next()
+    next();
   },
-  carValidator, auth(USER_ROLE.admin), carModels.createCars);
+  carValidator,
+  auth(USER_ROLE.admin),
+  carModels.createCars,
+);
 router.get('/', carModels.getAllCars);
+router.get('/new-arrivals', carModels.getNewArrivals);
 router.get('/:carId', carModels.getSingleCar);
 router.put('/:carId', auth(USER_ROLE.admin), carModels.updateCar);
 router.delete('/:carId', auth(USER_ROLE.admin), carModels.deleteCar);

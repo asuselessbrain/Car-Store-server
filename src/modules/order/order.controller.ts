@@ -143,7 +143,7 @@ const sellByBrand = async (req: Request, res: Response) => {
 const updateStatus = catchAsync(async (req: Request, res: Response) => {
   const orderId = req.params.orderId;
 
-  const result = await orderServices.updateStatus(orderId);
+  const result = await orderServices.updateStatus(orderId as string);
 
   responser(res, {
     statusCode: StatusCodes.OK,
@@ -155,7 +155,7 @@ const updateStatus = catchAsync(async (req: Request, res: Response) => {
 const updateStatusByUser = catchAsync(async (req: Request, res: Response) => {
   const orderId = req.params.orderId;
   // await userService.deleteUser(userId);
-  const result = await orderServices.updateStatusByUser(orderId);
+  const result = await orderServices.updateStatusByUser(orderId as string);
 
   responser(res, {
     statusCode: StatusCodes.OK,
@@ -172,7 +172,7 @@ const popularCars = catchAsync(async (req: Request, res: Response) => {
     message: 'Popular Cars retrive successfully',
     data: result,
   });
-})
+});
 
 export const orderController = {
   createOrder,
@@ -184,5 +184,5 @@ export const orderController = {
   sellByBrand,
   totalRevenue,
   verifyPayment,
-  popularCars
+  popularCars,
 };

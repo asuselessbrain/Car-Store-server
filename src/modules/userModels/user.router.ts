@@ -11,11 +11,6 @@ const userRouter = Router();
 
 userRouter.post(
   '/create-admin',
-  upload.single('profileImg'),
-  (req, res, next: NextFunction)=>{
-    req.body = JSON.parse(req?.body?.data);
-    next()
-  },
   validateRequest(UserValidation?.userValidationSchema),
   auth(USER_ROLE.admin),
   userController.createAdmin,
@@ -26,7 +21,7 @@ userRouter.get(
   userController.getSingleUser,
 );
 
-userRouter.put('/:userId', auth(USER_ROLE.user), userController.updateUser);
+userRouter.put('/:userId', auth(USER_ROLE.user, USER_ROLE.admin), userController.updateUser);
 
 userRouter.put(
   '/change-password/:id',

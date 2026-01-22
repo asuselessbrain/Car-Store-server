@@ -28,7 +28,6 @@ export async function generatePdfBuffer(html: string): Promise<Buffer> {
   return Buffer.from(pdfData); // <-- ✅ fix here
 }
 
-
 const updateCarInventoryInDB = async (carId: string, orderQuantity: number) => {
   const car = await CarModel.findById(carId);
   if (!car) {
@@ -71,10 +70,7 @@ const createOrderInDB = async (
   let result = await OrderModel.create(OrderData);
 
   // Determine return_url based on platform
-  const return_url =
-    order.platform === 'mobile'
-      ? config.sp.sp_return_url_mobile
-      : config.sp.sp_return_url_web;
+  const return_url = config.sp.sp_return_url
 
   const spPayload = {
     amount: OrderData.totalPrice,
@@ -86,10 +82,14 @@ const createOrderInDB = async (
     customer_phone: '017XXXXXXXX',
     customer_city: 'Patukhali',
     client_ip,
-    return_url, // Added return_url to payload
+    return_url,
   };
 
-  const payment = await orderUtils.paymentResult(spPayload, order.platform as 'web' | 'mobile');
+  console.log(spPayload);
+
+  const payment = await orderUtils.paymentResult(
+    spPayload
+  );
 
   if (payment?.transactionStatus) {
     await result.updateOne({
@@ -105,11 +105,11 @@ const createOrderInDB = async (
 
 const getAllOrdersFromDB = async (payload: Record<string, any>) => {
   const {
-    searchTerm = "",
+    searchTerm = '',
     page = 1,
     limit = 10,
-    sortBy = "createdAt",
-    sortOrder = "desc",
+    sortBy = 'createdAt',
+    sortOrder = 'desc',
     status,
     paymentStatus,
   } = payload;
@@ -118,7 +118,7 @@ const getAllOrdersFromDB = async (payload: Record<string, any>) => {
 
   const sortStage: PipelineStage.Sort = {
     $sort: {
-      [String(sortBy)]: sortOrder === "desc" ? -1 : 1,
+      [String(sortBy)]: sortOrder === 'desc' ? -1 : 1,
     },
   };
 
@@ -126,39 +126,39 @@ const getAllOrdersFromDB = async (payload: Record<string, any>) => {
 
   // Search by user email
   if (searchTerm) {
-    matchConditions["user.email"] = { $regex: searchTerm, $options: "i" };
+    matchConditions['user.email'] = { $regex: searchTerm, $options: 'i' };
   }
 
   // Filter by status
   if (status) {
-    matchConditions["status"] = status;
+    matchConditions['status'] = status;
   }
 
   // Filter by paymentStatus
   if (paymentStatus) {
-    matchConditions["paymentStatus"] = paymentStatus;
+    matchConditions['paymentStatus'] = paymentStatus;
   }
 
   // Main data query pipeline
   const pipeline: PipelineStage[] = [
     {
       $lookup: {
-        from: "users",
-        localField: "userId",
-        foreignField: "_id",
-        as: "user",
+        from: 'users',
+        localField: 'userId',
+        foreignField: '_id',
+        as: 'user',
       },
     },
-    { $unwind: "$user" },
+    { $unwind: '$user' },
     {
       $lookup: {
-        from: "cars",
-        localField: "car",
-        foreignField: "_id",
-        as: "car",
+        from: 'cars',
+        localField: 'car',
+        foreignField: '_id',
+        as: 'car',
       },
     },
-    { $unwind: "$car" },
+    { $unwind: '$car' },
     { $match: matchConditions },
     sortStage,
     { $skip: skip },
@@ -171,24 +171,24 @@ const getAllOrdersFromDB = async (payload: Record<string, any>) => {
   const countPipeline: PipelineStage[] = [
     {
       $lookup: {
-        from: "users",
-        localField: "userId",
-        foreignField: "_id",
-        as: "user",
+        from: 'users',
+        localField: 'userId',
+        foreignField: '_id',
+        as: 'user',
       },
     },
-    { $unwind: "$user" },
+    { $unwind: '$user' },
     {
       $lookup: {
-        from: "cars",
-        localField: "car",
-        foreignField: "_id",
-        as: "car",
+        from: 'cars',
+        localField: 'car',
+        foreignField: '_id',
+        as: 'car',
       },
     },
-    { $unwind: "$car" },
+    { $unwind: '$car' },
     { $match: matchConditions },
-    { $count: "total" },
+    { $count: 'total' },
   ];
 
   const totalResult = await OrderModel.aggregate(countPipeline);
@@ -204,8 +204,6 @@ const getAllOrdersFromDB = async (payload: Record<string, any>) => {
     result: data,
   };
 };
-
-
 
 const calculateTotalRevenue = async () => {
   const result = await OrderModel.aggregate([
@@ -327,181 +325,176 @@ const verifyPayment = async (userEmail: string, order_id: string) => {
       .populate<{ car: Cars }>('car')
       .populate<{ userId: IUser }>('userId');
 
-     const invoiceHtml = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>Invoice</title>
-  <style>
-    body { font-family: Arial, sans-serif; background-color: #f9f9f9; }
-    .invoice-box {
-      max-width: 800px;
-      margin: auto;
-      padding: 30px;
-      border: 1px solid #eee;
-      background: #fff;
-      font-size: 14px;
-    }
-    table {
-      width: 100%;
-      line-height: inherit;
-      text-align: left;
-      border-collapse: collapse;
-    }
-    td, th {
-      padding: 8px;
-      border: 1px solid #ddd;
-    }
-    .logo {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .footer {
-      margin-top: 30px;
-      font-size: 13px;
-      color: #555;
-    }
-  </style>
-</head>
-<body>
-  <div class="invoice-box">
-    <div class="logo">
-      <img src="https://i.ibb.co/GfMpgKfV/logo.png" alt="AutoSphere Logo" width="120" />
-    </div>
-    <h2 style="text-align: center;">Invoice - AutoSphere</h2>
+//     const invoiceHtml = `
+// <!DOCTYPE html>
+// <html>
+// <head>
+//   <meta charset="utf-8" />
+//   <title>Invoice</title>
+//   <style>
+//     body { font-family: Arial, sans-serif; background-color: #f9f9f9; }
+//     .invoice-box {
+//       max-width: 800px;
+//       margin: auto;
+//       padding: 30px;
+//       border: 1px solid #eee;
+//       background: #fff;
+//       font-size: 14px;
+//     }
+//     table {
+//       width: 100%;
+//       line-height: inherit;
+//       text-align: left;
+//       border-collapse: collapse;
+//     }
+//     td, th {
+//       padding: 8px;
+//       border: 1px solid #ddd;
+//     }
+//     .logo {
+//       text-align: center;
+//       margin-bottom: 20px;
+//     }
+//     .footer {
+//       margin-top: 30px;
+//       font-size: 13px;
+//       color: #555;
+//     }
+//   </style>
+// </head>
+// <body>
+//   <div class="invoice-box">
+//     <div class="logo">
+//       <img src="https://i.ibb.co/GfMpgKfV/logo.png" alt="AutoSphere Logo" width="120" />
+//     </div>
+//     <h2 style="text-align: center;">Invoice - AutoSphere</h2>
     
-    <p><strong>Name:</strong> ${res?.userId?.firstName} ${res?.userId?.lastName}</p>
-    <p><strong>Email:</strong> ${res?.userId?.email}</p>
-    <p><strong>Order ID:</strong> ${res?._id}</p>
+//     <p><strong>Name:</strong> ${res?.userId?.firstName} ${res?.userId?.lastName}</p>
+//     <p><strong>Email:</strong> ${res?.userId?.email}</p>
+//     <p><strong>Order ID:</strong> ${res?._id}</p>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Car</th>
-          <th>Brand</th>
-          <th>Category</th>
-          <th>Unit Price</th>
-          <th>Quantity</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>${res?.car?.name}</td>
-          <td>${res?.car?.brand}</td>
-          <td>${res?.car?.category}</td>
-          <td>${res?.car?.price.toLocaleString()} BDT</td>
-          <td>${res?.quantity}</td>
-          <td><strong>${res?.totalPrice.toLocaleString()} BDT</strong></td>
-        </tr>
-      </tbody>
-    </table>
+//     <table>
+//       <thead>
+//         <tr>
+//           <th>Car</th>
+//           <th>Brand</th>
+//           <th>Category</th>
+//           <th>Unit Price</th>
+//           <th>Quantity</th>
+//           <th>Total</th>
+//         </tr>
+//       </thead>
+//       <tbody>
+//         <tr>
+//           <td>${res?.car?.name}</td>
+//           <td>${res?.car?.brand}</td>
+//           <td>${res?.car?.category}</td>
+//           <td>${res?.car?.price.toLocaleString()} BDT</td>
+//           <td>${res?.quantity}</td>
+//           <td><strong>${res?.totalPrice.toLocaleString()} BDT</strong></td>
+//         </tr>
+//       </tbody>
+//     </table>
 
-    <p><strong>Status:</strong> ${res?.status}</p>
-    <p>Thank you for your purchase!</p>
+//     <p><strong>Status:</strong> ${res?.status}</p>
+//     <p>Thank you for your purchase!</p>
 
-    <div class="footer">
-      <p><strong>Issued by:</strong> AutoSphere</p>
-      <p><strong>Date:</strong> ${new Date().toLocaleDateString('en-BD', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
-      <p><strong>Contact:</strong> support@autosphere.com | +8801XXXXXXXXX</p>
-      <p>We appreciate your business. Please reach out if you have any questions or concerns.</p>
-    </div>
-  </div>
-</body>
-</html>
-`;
+//     <div class="footer">
+//       <p><strong>Issued by:</strong> AutoSphere</p>
+//       <p><strong>Date:</strong> ${new Date().toLocaleDateString('en-BD', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+//       <p><strong>Contact:</strong> support@autosphere.com | +8801XXXXXXXXX</p>
+//       <p>We appreciate your business. Please reach out if you have any questions or concerns.</p>
+//     </div>
+//   </div>
+// </body>
+// </html>
+// `;
 
+//     const pdfBuffer = await generatePdfBuffer(invoiceHtml);
 
-     // Generate PDF buffer using Puppeteer
-    const pdfBuffer = await generatePdfBuffer(invoiceHtml);
+//     const mailBody = `
+//   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9;">
+//     <h2 style="color: #2c3e50; text-align: center;">🚗 Order Confirmation</h2>
+//     <p style="font-size: 16px;">Hello <strong>${res?.userId?.firstName} ${res?.userId?.lastName}</strong>,</p>
+//     <p style="font-size: 16px;">Thank you for your order! Here are your order details:</p>
 
+//     <table style="width: 100%; font-size: 15px; border-collapse: collapse; margin-top: 15px;">
+//       <tr>
+//         <td style="padding: 8px; border: 1px solid #ddd;"><strong>Order ID:</strong></td>
+//         <td style="padding: 8px; border: 1px solid #ddd;">${res?._id}</td>
+//       </tr>
+//       <tr>
+//         <td style="padding: 8px; border: 1px solid #ddd;"><strong>Product:</strong></td>
+//         <td style="padding: 8px; border: 1px solid #ddd;">${res?.car?.brand} - ${res?.car?.model}</td>
+//       </tr>
+//       <tr>
+//         <td style="padding: 8px; border: 1px solid #ddd;"><strong>Category:</strong></td>
+//         <td style="padding: 8px; border: 1px solid #ddd;">${res?.car?.category}</td>
+//       </tr>
+//       <tr>
+//         <td style="padding: 8px; border: 1px solid #ddd;"><strong>Price:</strong></td>
+//         <td style="padding: 8px; border: 1px solid #ddd;">${res?.car?.price.toLocaleString()} BDT</td>
+//       </tr>
+//       <tr>
+//         <td style="padding: 8px; border: 1px solid #ddd;"><strong>Quantity:</strong></td>
+//         <td style="padding: 8px; border: 1px solid #ddd;">${res?.quantity}</td>
+//       </tr>
+//       <tr>
+//         <td style="padding: 8px; border: 1px solid #ddd;"><strong>Total:</strong></td>
+//         <td style="padding: 8px; border: 1px solid #ddd;"><strong>${res?.totalPrice.toLocaleString()} BDT</strong></td>
+//       </tr>
+//       <tr>
+//         <td style="padding: 8px; border: 1px solid #ddd;"><strong>Status:</strong></td>
+//         <td style="padding: 8px; border: 1px solid #ddd;">${res?.status}</td>
+//       </tr>
+//     </table>
 
-    const mailBody = `
-  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9;">
-    <h2 style="color: #2c3e50; text-align: center;">🚗 Order Confirmation</h2>
-    <p style="font-size: 16px;">Hello <strong>${res?.userId?.firstName} ${res?.userId?.lastName}</strong>,</p>
-    <p style="font-size: 16px;">Thank you for your order! Here are your order details:</p>
-
-    <table style="width: 100%; font-size: 15px; border-collapse: collapse; margin-top: 15px;">
-      <tr>
-        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Order ID:</strong></td>
-        <td style="padding: 8px; border: 1px solid #ddd;">${res?._id}</td>
-      </tr>
-      <tr>
-        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Product:</strong></td>
-        <td style="padding: 8px; border: 1px solid #ddd;">${res?.car?.brand} - ${res?.car?.model}</td>
-      </tr>
-      <tr>
-        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Category:</strong></td>
-        <td style="padding: 8px; border: 1px solid #ddd;">${res?.car?.category}</td>
-      </tr>
-      <tr>
-        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Price:</strong></td>
-        <td style="padding: 8px; border: 1px solid #ddd;">${res?.car?.price.toLocaleString()} BDT</td>
-      </tr>
-      <tr>
-        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Quantity:</strong></td>
-        <td style="padding: 8px; border: 1px solid #ddd;">${res?.quantity}</td>
-      </tr>
-      <tr>
-        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Total:</strong></td>
-        <td style="padding: 8px; border: 1px solid #ddd;"><strong>${res?.totalPrice.toLocaleString()} BDT</strong></td>
-      </tr>
-      <tr>
-        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Status:</strong></td>
-        <td style="padding: 8px; border: 1px solid #ddd;">${res?.status}</td>
-      </tr>
-    </table>
-
-    <p style="margin-top: 20px; font-size: 14px; color: #555;">We will notify you once your product is shipped. If you have any questions, feel free to contact our support.</p>
+//     <p style="margin-top: 20px; font-size: 14px; color: #555;">We will notify you once your product is shipped. If you have any questions, feel free to contact our support.</p>
     
-     <p style="font-size: 14px;">
-      Regards, <br/><strong>The AutoSphere Team</strong>
-    </p>
+//      <p style="font-size: 14px;">
+//       Regards, <br/><strong>The AutoSphere Team</strong>
+//     </p>
     
-    <div style="margin-top: 20px; text-align: center; font-size: 13px; color: #999;">
-      © ${new Date().getFullYear()} Car Store. All rights reserved.
-    </div>
-  </div>
-`;
+//     <div style="margin-top: 20px; text-align: center; font-size: 13px; color: #999;">
+//       © ${new Date().getFullYear()} Car Store. All rights reserved.
+//     </div>
+//   </div>
+// `;
 
-
-
-      await sendOrderConfirmationMail(
-      'ahmedshohagarfan@gmail.com',
-      userEmail,
-      `Order Confirmed - ${res?.car?.brand} ${res?.car?.model} | Order ID: ${res?._id}`,
-      mailBody,
-      {
-        filename: `Invoice-${res?._id}.pdf`,
-        content: pdfBuffer,
-      }
-    );
+//     await sendOrderConfirmationMail(
+//       'ahmedshohagarfan@gmail.com',
+//       userEmail,
+//       `Order Confirmed - ${res?.car?.brand} ${res?.car?.model} | Order ID: ${res?._id}`,
+//       mailBody,
+//       {
+//         filename: `Invoice-${res?._id}.pdf`,
+//         content: pdfBuffer,
+//       },
+//     );
   }
   return verifiedPayment;
 };
 
-const populerCars = async() => {
+const populerCars = async () => {
   const result = await OrderModel.aggregate([
-    {$group: {_id: '$car',  totalQuantity: {$sum: "$quantity"}}},
+    { $group: { _id: '$car', totalQuantity: { $sum: '$quantity' } } },
     {
       $lookup: {
-        from: "cars",
-        foreignField: "_id",
-        localField: "_id",
-        as: "carDetails"
-      }
+        from: 'cars',
+        foreignField: '_id',
+        localField: '_id',
+        as: 'carDetails',
+      },
     },
     {
-      $unwind: "$carDetails"
+      $unwind: '$carDetails',
     },
     {
-      $sort: {totalQuantity: -1}
-    }
-  ]).limit(8)
+      $sort: { totalQuantity: -1 },
+    },
+  ]).limit(8);
   return result;
-}
+};
 
 export const orderServices = {
   updateCarInventoryInDB,
@@ -514,5 +507,5 @@ export const orderServices = {
   sellByBrand,
   totalRevenue,
   verifyPayment,
-  populerCars
+  populerCars,
 };

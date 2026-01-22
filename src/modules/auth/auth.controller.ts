@@ -6,59 +6,31 @@ import { AuthService } from './auth.service';
 import { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 
-
 const register = catchAsync(async (req: Request, res: Response) => {
-
-  const result = await AuthService.register(req.file,req.body);
+  console.log(req.body)
+  const result = await AuthService.register(req.body);
 
   responser(res, {
     statusCode: StatusCodes.CREATED,
-    message: 'OTP sent to your email',
+    message: 'Registration Successful',
     data: {
-      email: result
+      email: result,
     },
   });
 });
 
-const verifyOTP = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.verifyOTP(req.body);
-
-  if (req?.body?.context === "login" && result &&  "refreshToken" in result) {
-
-    res.cookie('refreshToken', result?.refreshToken, {
-      secure: config.node_env === 'production',
-      httpOnly: true,
-      sameSite: 'none',
-    });
-  }
-
-  const message =
-    req?.body?.context === 'signup'
-      ? 'User registered and verified successfully!'
-      : 'User logged in successfully!';
-
-  responser(res, {
-    statusCode: StatusCodes.OK,
-    message,
-    data: result
-  })
-})
-
-const resendOTP = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.resendOTP(req.body);
-  responser(res, {
-    statusCode: StatusCodes.OK,
-    message: "OTP has been resent successfully.",
-    data: result
-  })
-})
-
 const login = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.login(req.body);
 
+  res.cookie('refreshToken', result?.refreshToken, {
+    secure: config.node_env === 'production',
+    httpOnly: true,
+    sameSite: 'none',
+  });
+
   responser(res, {
     statusCode: StatusCodes.ACCEPTED,
-    message: 'OTP sent to your email',
+    message: 'Login Successful',
     data: result,
   });
 });
@@ -94,6 +66,4 @@ export const AuthControllers = {
   login,
   changePassword,
   generateTokenUsingRefreshToken,
-  verifyOTP,
-  resendOTP
 };

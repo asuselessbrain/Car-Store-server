@@ -1,1 +1,1 @@
-declare module "pdf-creator-node";
+declare module 'pdf-creator-node';

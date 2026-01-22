@@ -20,52 +20,14 @@ export const userValidationSchema = z.object({
       .string({ required_error: 'Phone number is required' })
       .regex(/^01[3-9]\d{8}$/, 'Invalid Bangladeshi phone number'),
 
-    gender: z.enum(['male', 'female', 'others'], {
-      required_error: 'Gender is required',
-    }),
-
-    dob: z.coerce.date({ required_error: 'Date of birth is required' }),
-
-    district: z
-      .string({ required_error: 'District is required' })
-      .min(5, 'District must be at least 5 characters'),
-    
-    upazila: z
-      .string({ required_error: 'Upazila is required' })
-      .min(5, 'Upazila must be at least 5 characters'),
-
-    postOffice: z
-      .string({ required_error: 'Post Office is required' })
-      .min(5, 'Post Office must be at least 5 characters'),
-
-    postalCode: z
-      .string({ required_error: 'Postal Code is required' }),
-    
-    about: z
-      .string({ required_error: 'About is required' })
-      .min(5, 'About must be at least 5 characters'),
-
     password: z
       .string({ required_error: 'Password is required' })
       .min(6, 'Password must be at least 6 characters')
       .max(20, 'Password must be at most 20 characters'),
 
-    role: z
-      .enum(['user', 'admin'])
-      .default('user'),
+    role: z.enum(['user', 'admin']).default('user'),
 
-    userStatus: z
-      .enum(['active', 'blocked'])
-      .default('active'),
-
-    verified: z
-      .boolean()
-      .default(false),
-
-
-    loginVerification: z
-      .boolean()
-      .default(false),
+    userStatus: z.enum(['active', 'blocked']).default('active'),
   }),
 });
 

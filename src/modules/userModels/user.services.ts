@@ -1,26 +1,19 @@
 import QueryBuilder from '../../builder/QueryBuilder';
 import config from '../../config';
-import { sendImageToCloudinary } from '../../utils/imageUploderInCloudinary';
 import { IUser } from './user.interface';
 import User from './user.model';
 import bcrypt from 'bcrypt';
 
-const createAdmin = async (file: any, payload: IUser) => {
+const createAdmin = async (payload: IUser) => {
   payload.role = 'admin';
-  payload.verified = true;
 
-  const { secure_url } = await sendImageToCloudinary(file?.path, payload?.firstName + payload?.lastName)
 
-  const adminInfo = {...payload, profileImg: secure_url}
-
-  const result = await User.create(adminInfo);
+  const result = await User.create(payload);
 
   return result;
 };
 
 const getUser = async (payload: Record<string, unknown>) => {
-  console.log(payload)
-
   const searchFields = ['email'];
 
   const userQuery = new QueryBuilder(User.find(), payload)

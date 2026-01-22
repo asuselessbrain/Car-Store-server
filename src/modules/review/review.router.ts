@@ -21,12 +21,18 @@ reviewRouter.get(
 
 reviewRouter.get('/get-snigle/:reviewId', reviewController.getSingleReview);
 
-reviewRouter.get("/single-car/:id", reviewController.getSingleCarReview);
+reviewRouter.get('/single-car/:id', reviewController.getSingleCarReview);
 
-reviewRouter.put('/:reviewId', auth(USER_ROLE.user), reviewController.updateUserReview);
+reviewRouter.put(
+  '/:reviewId',
+  auth(USER_ROLE.user),
+  reviewController.updateUserReview,
+);
 
-reviewRouter.delete('/:reviewId', auth(USER_ROLE.user), reviewController.deleteReview);
-
-
+reviewRouter.delete(
+  '/:reviewId',
+  auth(USER_ROLE.user),
+  reviewController.deleteReview,
+);
 
 export default reviewRouter;

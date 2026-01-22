@@ -19,8 +19,8 @@ app.use(
       'http://localhost:5173',
       'https://car-store-frontend-delta.vercel.app',
       'https://auto-sphere-ashy.vercel.app',
-      'exp://192.168.0.18:8081',
-      'http://ug2002040.cse.pstu.ac.bd'
+      'https://auto-sphare-client.vercel.app',
+      'http://ug2002040.cse.pstu.ac.bd',
     ],
     credentials: true,
   }),
@@ -34,10 +34,10 @@ app.use('/api/review', reviewRouter);
 app.use('/api/contact', contactRouter);
 app.get('/', (req: Request, res: Response) => {
   res.json({
-    Welcome: "Welcome to AutoSphere Backend",
-    Developer: "Arfan Ahmed",
-    Faculty: "Computer Science and Enginnering",
-    University: "Patuakhali Science and Technology University"
+    Welcome: 'Welcome to AutoSphere Backend',
+    Developer: 'Arfan Ahmed',
+    Faculty: 'Computer Science and Enginnering',
+    University: 'Patuakhali Science and Technology University',
   });
 });
 

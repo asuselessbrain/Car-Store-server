@@ -7,10 +7,10 @@ import { catchAsync } from '../../utils/catchAsync';
 import { responser } from '../../utils/responser';
 
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
-
   const payload = req.body;
+  console.log(payload)
 
-  const result = await userService.createAdmin(req?.file,payload);
+  const result = await userService.createAdmin(payload);
 
   responser(res, {
     statusCode: StatusCodes.CREATED,
@@ -48,7 +48,7 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
   body.email = req?.user?.email;
   body.userStatus = req?.user?.userStatus;
 
-  const result = await userService.updateUser(userId, body);
+  const result = await userService.updateUser(userId as string, body);
 
   responser(res, {
     statusCode: StatusCodes.OK,
@@ -59,7 +59,7 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
 
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
   const userId = req.params.userId;
-  await userService.deleteUser(userId);
+  await userService.deleteUser(userId as string);
 
   responser(res, {
     statusCode: StatusCodes.OK,
@@ -72,7 +72,7 @@ const blockUser = catchAsync(async (req: Request, res: Response) => {
   const userId = req.params.userId;
   const body = req.body;
   // await userService.deleteUser(userId);
-  const result = await userService.blockUser(userId, body);
+  const result = await userService.blockUser(userId as string, body);
 
   responser(res, {
     statusCode: StatusCodes.OK,
@@ -85,7 +85,7 @@ const changePassword = catchAsync(async (req: Request, res: Response) => {
   const userId = req.params.id;
   const { oldPassword, newPassword } = req.body;
 
-  const result = await userService.changePassword(userId, {
+  const result = await userService.changePassword(userId as string, {
     oldPassword,
     newPassword,
   });
